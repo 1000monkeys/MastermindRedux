@@ -59,6 +59,9 @@ class Button(UIElement):
         self.text_rect = self.text_rendered.get_rect()
         self.text_rect.center = self.normal_rect.center
 
+    def get_rect(self):
+        return self.rect
+
     def draw(self):
         self.screen.fill(self.text_color, self.border_rect)
         self.screen.fill(self.background_color, self.rect)
@@ -67,7 +70,7 @@ class Button(UIElement):
     """
     pass events from the screen into this function to handle button specific behaviour
     """
-    def check_events(self, events):
+    def handle_events(self, events):
         for event in events:
             if event.type == pygame.MOUSEMOTION:
                 if self.border_rect.collidepoint(event.pos):

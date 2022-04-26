@@ -9,18 +9,15 @@ class DisplayManager:
     def __init__(self, pygame, screen) -> None:
         self.screen = screen
         self.screen_id = 0
-        self.screens = [
-            MainMenu(pygame, screen, self),
-            Settings(pygame, screen, self)
-        ]
+
+        # Screen type to screen_id
+        self.screens = list()
+        self.screens.insert(0, MainMenu(pygame, screen, self))
+        self.screens.insert(1, Settings(pygame, screen, self))
 
     def get_current_screen(self):
         return self.screens[self.screen_id]
 
-    def change_screen(self, screen_class):
-        counter = 0
-        for screen in self.screens:
-            if screen.__class__ == screen_class:
-                self.screen_id = counter
-                break
-            counter = counter + 1
+    def change_screen(self, screen_id):
+        self.screen_id = screen_id
+

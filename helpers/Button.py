@@ -1,6 +1,8 @@
 import pygame
 
-class Button:
+from helpers.UIElement import UIElement
+
+class Button(UIElement):
     def __init__(self, screen, text, position, text_color, background_color, font_size=36, padding=5, callback_function=None) -> None:
         self.screen = screen
         self.screen_rect = screen.get_rect()

@@ -1,10 +1,7 @@
-from array import array
 import sys
 from unittest.mock import call
 from helpers.TextDisplay import TextDisplay
 from helpers.Button import Button
-import pygame
-
 from helpers.Screen import Screen
 from helpers.Button import Button
 from screens.Settings import Settings
@@ -34,6 +31,7 @@ class MainMenu(Screen):
             position=(10, 10),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
+            border_color=(255, 255, 255),
             font_size=48
         )
 

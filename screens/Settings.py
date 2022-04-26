@@ -1,4 +1,6 @@
+from helpers.Container import Container
 from helpers.Screen import Screen
+from helpers.TextDisplay import TextDisplay
 
 
 class Settings(Screen):
@@ -13,8 +15,40 @@ class Settings(Screen):
             (1024, 786)
         )
 
+        items = list()
+        items.append(
+            TextDisplay(
+                screen,
+                text="Optie menu:",
+                #text="Welcome to Mastermind, Challenge your brain!",
+                position=(10, 10),
+                text_color=(255, 255, 255),
+                background_color=None,
+                border_color=None,
+                font_size=48,
+                padding=10
+            )
+        )
+        items.append(
+            TextDisplay(
+                screen,
+                text="Taal:",
+                position=(40, 150),
+                font_size=36,
+            )
+        )
+        self.container = Container(
+            pygame,
+            screen,
+            items,
+            (55, 42, 34),
+            (255, 255, 255),
+            15
+        )
+
     def draw(self):
         self.screen.blit(self.background_image, [0,0])
+        self.container.draw()
         """
         for key in self.texts.keys():
             self.texts[key].draw()
@@ -22,7 +56,6 @@ class Settings(Screen):
         for key in self.buttons.keys():
             self.buttons[key].draw()
         """
-        pass
         
     def handle_events(self, events):
         super().handle_events(events)

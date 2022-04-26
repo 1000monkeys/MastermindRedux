@@ -1,4 +1,5 @@
 import pygame
+
 from helpers.DisplayManager import DisplayManager
 
 pygame.init()

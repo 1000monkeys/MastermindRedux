@@ -9,5 +9,5 @@ class Screen:
             if event.type == self.pygame.QUIT:
                 sys.exit()
 
-    def draw(self, screen):
+    def draw(self):
         pass

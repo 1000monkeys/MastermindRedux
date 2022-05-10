@@ -12,7 +12,7 @@ class Container(UIElement):
         if items is not None:
             self.items = items
         elif items is None:
-            self.items = list()
+            self.items = dict()
 
         self.background_color = background_color
         self.border_color = border_color
@@ -22,19 +22,19 @@ class Container(UIElement):
         if len(self.items) > 0:
             self.max_position = (0, 0)
             self.min_position = (sys.maxsize, sys.maxsize)
-            for item in self.items:
-                if isinstance(item, type(Container)):
+            for key in self.items.keys():
+                if isinstance(self.items[key], type(Container)):
                     raise Exception("Cannot put a container in a container!")
-                    
-                if item.get_rect()[0] < self.min_position[1]:
-                    self.min_position = (item.get_rect()[0], self.min_position[0])
-                if item.get_rect()[1] < self.min_position[1]:
-                    self.min_position = (self.min_position[0], item.get_rect()[1])
+                  
+                if self.items[key].get_rect()[0] < self.min_position[1]:
+                    self.min_position = (self.items[key].get_rect()[0], self.min_position[0])
+                if self.items[key].get_rect()[1] < self.min_position[1]:
+                    self.min_position = (self.min_position[0], self.items[key].get_rect()[1])
 
-                if item.get_rect()[0] + item.get_rect()[2] > self.max_position[0]:
-                    self.max_position = (item.get_rect()[0] + item.get_rect()[2], self.max_position[1])
-                if item.get_rect()[1] + item.get_rect()[3] > self.max_position[1]:
-                    self.max_position = (self.max_position[0], item.get_rect()[1] + item.get_rect()[3])
+                if self.items[key].get_rect()[0] + self.items[key].get_rect()[2] > self.max_position[0]:
+                    self.max_position = (self.items[key].get_rect()[0] + self.items[key].get_rect()[2], self.max_position[1])
+                if self.items[key].get_rect()[1] + self.items[key].get_rect()[3] > self.max_position[1]:
+                    self.max_position = (self.max_position[0], self.items[key].get_rect()[1] + self.items[key].get_rect()[3])
 
             self.border_rect = pygame.Rect(
                 self.min_position[0] - self.border_size - self.padding,
@@ -62,8 +62,8 @@ class Container(UIElement):
         self.screen.fill(self.border_color, self.border_rect)
         self.screen.fill(self.background_color, self.rect)
 
-        for item in self.items:
-            item.draw()
+        for key in self.items.keys():
+            self.items[key].draw()
 
     def handle_events(self):
         pass

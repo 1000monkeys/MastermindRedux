@@ -38,7 +38,7 @@ class Settings(Screen):
             position=(90, 125),
             font_size=36
         )
-        self.text_loops["taal2222222222"] = TextLoop(
+        self.text_loops["taal"] = TextLoop(
             screen,
             texts=["NL", "EN"],
             position=(800, 125),
@@ -50,13 +50,28 @@ class Settings(Screen):
             text="Aantal spel rondes:",
             position=(90, 175),
             font_size=36
+        )       
+        self.text_loops["aantal_spel_rondes"] = TextLoop(
+            screen,
+            texts=["1", "2", "4", "5", "10"],
+            position=(800, 175),
+            font_size=36
         )
+
+        
         self.texts["tijd_per_gok"] = TextDisplay(
             screen,
             text="Tijd per gok:",
             position=(90, 225),
             font_size=36
         )
+        self.text_loops["tijd_per_gok"] = TextLoop(
+            screen,
+            texts=["Geen limiet", "15 seconden", "30 seconden", "60 seconden"],
+            position=(800, 225),
+            font_size=36
+        )
+
         self.texts["herhalende_kleuren"] = TextDisplay(
             screen,
             text="Herhalende kleuren:",

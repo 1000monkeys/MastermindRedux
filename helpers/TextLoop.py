@@ -1,3 +1,4 @@
+import sys
 import pygame
 from helpers.TextDisplay import TextDisplay
 
@@ -14,33 +15,32 @@ class TextLoop:
         self.font_size = font_size
 
         self.current_option = 0
-
-        self.text_display = TextDisplay(
-            self.screen,
-            self.texts[self.current_option],
-            self.position,
-            self.text_color,
-            self.background_color,
-            self.border_color,
-            self.font_size,
-            self.padding
-        )
+        self.text_displays = list()
+        self.create_text_displays()
 
     def next_option(self):
         self.current_option = self.current_option + 1
         if self.current_option >= len(self.texts):
             self.current_option = 0
+        self.create_text_displays()
 
-        self.text_display = TextDisplay(
-            self.screen,
-            self.texts[self.current_option],
-            self.position,
-            self.text_color,
-            self.background_color,
-            self.border_color,
-            self.font_size,
-            self.padding
-        )
+    def get_text_displays(self):
+        return self.text_displays
+
+    def create_text_displays(self):
+        for i, text in enumerate(self.texts):
+            print(i)
+            self.text_displays.insert(i, TextDisplay(
+                    self.screen,
+                    text,
+                    self.position,
+                    self.text_color,
+                    self.background_color,
+                    self.border_color,
+                    self.font_size,
+                    self.padding
+                )
+            )
 
     def get_option(self):
         return self.current_option
@@ -53,26 +53,36 @@ class TextLoop:
             return Exception("Option position higher than amount of options!")
 
         self.current_option = option_pos
-
-        self.text_display = TextDisplay(
-            self.screen,
-            self.texts[self.current_option],
-            self.position,
-            self.text_color,
-            self.background_color,
-            self.border_color,
-            self.font_size,
-            self.padding
-        )
+        self.create_text_displays()
 
     def get_rect(self):
-        return self.text_display.get_rect()
+        self.max_position = (0, 0)
+        self.min_position = (sys.maxsize, sys.maxsize)
+        for text_display in self.text_displays:
+            if text_display.get_rect()[0] < self.min_position[1]:
+                self.min_position = (text_display.get_rect()[0], self.min_position[0])
+            if text_display.get_rect()[1] < self.min_position[1]:
+                self.min_position = (self.min_position[0], text_display.get_rect()[1])
+
+            if text_display.get_rect()[0] + text_display.get_rect()[2] > self.max_position[0]: # width
+                self.max_position = (text_display.get_rect()[0] + text_display.get_rect()[2], self.max_position[1])
+            if text_display.get_rect()[1] + text_display.get_rect()[3] > self.max_position[1]: # height
+                self.max_position = (self.max_position[0], text_display.get_rect()[1] + text_display.get_rect()[3])
+
+        self.rect = pygame.Rect(
+            self.min_position[0] - self.padding,
+            self.min_position[1] - self.padding,
+            self.max_position[0] - self.min_position[0] + self.padding * 2,
+            self.max_position[1] - self.min_position[1] + self.padding * 2
+        )
+
+        return self.rect
 
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.text_display.get_rect().collidepoint(event.pos):
+                if self.text_displays[self.current_option].get_rect().collidepoint(event.pos):
                     self.next_option()
 
     def draw(self):
-        self.text_display.draw()
+        self.text_displays[self.current_option].draw()

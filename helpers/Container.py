@@ -19,7 +19,9 @@ class Container(UIElement):
         self.border_color = border_color
         self.border_size = border_size
         self.padding = padding
+        self.calculate_size()
 
+    def calculate_size(self):
         if len(self.items) > 0:
             self.max_position = (0, 0)
             self.min_position = (sys.maxsize, sys.maxsize)
@@ -52,9 +54,10 @@ class Container(UIElement):
             )
         else:
             raise Exception('Cannot have an empty container!')
-
+        
     def add_item(self, item):
         self.items.append(item)
+        self.calculate_size()
 
     def get_rect(self):
         return self.border_rect

@@ -29,7 +29,6 @@ class TextLoop:
 
     def create_text_displays(self):
         for i, text in enumerate(self.texts):
-            print(i)
             self.text_displays.insert(i, TextDisplay(
                     self.screen,
                     text,

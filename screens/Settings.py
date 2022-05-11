@@ -78,22 +78,45 @@ class Settings(Screen):
             position=(90, 275),
             font_size=36
         )
+        self.text_loops["herhalende_kleuren"] = TextLoop(
+            screen,
+            texts=["Ja", "Nee"],
+            position=(800, 275),
+            font_size=36
+        )
+
+
         self.texts["lege_pionnen"] = TextDisplay(
             screen,
             text="Lege pionnen:",
             position=(90, 325),
             font_size=36
         )
+        self.text_loops["lege_pionnen"] = TextLoop(
+            screen,
+            texts=["Ja", "Nee"],
+            position=(800, 325),
+            font_size=36
+        )
+
+
         self.texts["moeilijkheid"] = TextDisplay(
             screen,
             text="Verander huidige moeilijkheids instellingen naar:",
             position=(65, 375),
             font_size=36
         )
+        self.text_loops["moeilijkheid"] = TextLoop(
+            screen,
+            texts=["Normaal", "Moeilijk"],
+            position=(800, 375),
+            font_size=36
+        )
+        
         self.texts["score_list_info"] = TextDisplay(
             screen,
             text="Huidige instellingen hebben GEEN top score lijst",
-            position=(65, 450),
+            position=(180, 450),
             font_size=36
         )
 

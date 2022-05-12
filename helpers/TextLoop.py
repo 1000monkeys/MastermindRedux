@@ -4,13 +4,14 @@ from helpers.TextDisplay import TextDisplay
 
 
 class TextLoop:
-    def __init__(self, screen, texts, position, text_color=(255, 255, 255), background_color=None, border_color=None, font_size=36, padding=0) -> None:
+    def __init__(self, screen, texts, position, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0) -> None:
         self.screen = screen
         self.texts = texts
         self.position = position
         self.text_color = text_color
         self.background_color = background_color
         self.border_color = border_color
+        self.border_size = border_size
         self.padding = padding
         self.font_size = font_size
 
@@ -28,16 +29,18 @@ class TextLoop:
         return self.text_displays
 
     def create_text_displays(self):
+        border_size = 10
         for i, text in enumerate(self.texts):
             self.text_displays.insert(i, TextDisplay(
-                    self.screen,
-                    text,
-                    self.position,
-                    self.text_color,
-                    self.background_color,
-                    self.border_color,
-                    self.font_size,
-                    self.padding
+                    screen=self.screen,
+                    text=text,
+                    position=self.position,
+                    text_color=self.text_color,
+                    background_color=None,
+                    border_color=None,
+                    border_size=10,
+                    font_size=self.font_size,
+                    padding=self.padding
                 )
             )
 

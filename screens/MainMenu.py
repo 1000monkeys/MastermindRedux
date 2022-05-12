@@ -26,6 +26,7 @@ class MainMenu(Screen):
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             border_color=(255, 255, 255),
+            border_size=5,
             font_size=48,
             padding=5
         )
@@ -37,7 +38,9 @@ class MainMenu(Screen):
             position=(75, 150),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
-            font_size=36
+            font_size=36,
+            border_size=5,
+            padding=5
         )
 
         self.buttons["settings"] = Button(
@@ -47,6 +50,8 @@ class MainMenu(Screen):
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             font_size=36,
+            border_size=5,
+            padding=5,
             callback_function=self.setting_button
         )
 
@@ -56,7 +61,10 @@ class MainMenu(Screen):
             position=(75, 350),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
-            font_size=36
+            font_size=36,
+            border_size=5,
+            padding=5,
+            callback_function=self.highscore_button
         )
 
         self.buttons["exit"] = Button(
@@ -66,6 +74,8 @@ class MainMenu(Screen):
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             font_size=36,
+            border_size=5,
+            padding=5,
             callback_function=self.exit_button
         )
 
@@ -74,6 +84,9 @@ class MainMenu(Screen):
 
     def setting_button(self):
         self.display_manager.change_screen(1)
+
+    def highscore_button(self):
+        self.display_manager.change_screen(2)
 
     def draw(self):
         self.screen.blit(self.background_image, [0,0])

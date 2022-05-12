@@ -32,29 +32,37 @@ class Settings(Screen):
             font_size=48
         )
 
+        self.texts["beschrijving"] = TextDisplay(
+            screen,
+            text="Klik op de optie(rechts) om door de opties te lussen!",
+            position=(65, 125),
+            text_color=(255, 255, 255),
+            font_size=36
+        )
+
         self.texts["taal"] = TextDisplay(
             screen,
             text="Taal:",
-            position=(90, 125),
+            position=(90, 175),
             font_size=36
         )
         self.text_loops["taal"] = TextLoop(
             screen,
             texts=["NL", "EN"],
-            position=(800, 125),
+            position=(800, 175),
             font_size=36
         )
 
         self.texts["aantal_spel_rondes"] = TextDisplay(
             screen,
             text="Aantal spel rondes:",
-            position=(90, 175),
+            position=(90, 225),
             font_size=36
         )       
         self.text_loops["aantal_spel_rondes"] = TextLoop(
             screen,
             texts=["1", "2", "4", "5", "10"],
-            position=(800, 175),
+            position=(800, 225),
             font_size=36
         )
 
@@ -62,37 +70,23 @@ class Settings(Screen):
         self.texts["tijd_per_gok"] = TextDisplay(
             screen,
             text="Tijd per gok:",
-            position=(90, 225),
+            position=(90, 275),
             font_size=36
         )
         self.text_loops["tijd_per_gok"] = TextLoop(
             screen,
             texts=["Geen limiet", "15 seconden", "30 seconden", "60 seconden"],
-            position=(800, 225),
+            position=(800, 275),
             font_size=36
         )
 
         self.texts["herhalende_kleuren"] = TextDisplay(
             screen,
             text="Herhalende kleuren:",
-            position=(90, 275),
-            font_size=36
-        )
-        self.text_loops["herhalende_kleuren"] = TextLoop(
-            screen,
-            texts=["Ja", "Nee"],
-            position=(800, 275),
-            font_size=36
-        )
-
-
-        self.texts["lege_pionnen"] = TextDisplay(
-            screen,
-            text="Lege pionnen:",
             position=(90, 325),
             font_size=36
         )
-        self.text_loops["lege_pionnen"] = TextLoop(
+        self.text_loops["herhalende_kleuren"] = TextLoop(
             screen,
             texts=["Ja", "Nee"],
             position=(800, 325),
@@ -100,23 +94,37 @@ class Settings(Screen):
         )
 
 
+        self.texts["lege_pionnen"] = TextDisplay(
+            screen,
+            text="Lege pionnen:",
+            position=(90, 375),
+            font_size=36
+        )
+        self.text_loops["lege_pionnen"] = TextLoop(
+            screen,
+            texts=["Ja", "Nee"],
+            position=(800, 375),
+            font_size=36
+        )
+
+
         self.texts["moeilijkheid"] = TextDisplay(
             screen,
             text="Verander huidige moeilijkheids instellingen naar:",
-            position=(65, 375),
+            position=(65, 425),
             font_size=36
         )
         self.text_loops["moeilijkheid"] = TextLoop(
             screen,
             texts=["Normaal", "Moeilijk"],
-            position=(800, 375),
+            position=(800, 425),
             font_size=36
         )
         
         self.texts["score_list_info"] = TextDisplay(
             screen,
             text="Huidige instellingen hebben GEEN top score lijst",
-            position=(180, 450),
+            position=(180, 500),
             font_size=36
         )
 
@@ -137,6 +145,8 @@ class Settings(Screen):
             position=(925, 700),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
+            border_size=5,
+            padding=5,
             font_size=36,
             callback_function=self.back
         )

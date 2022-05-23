@@ -3,9 +3,11 @@ import json
 from operator import contains, itemgetter
 from os import path
 import sys
+from helpers.Assets import Assets
 from helpers.Button import Button
 from helpers.Container import Container
 from helpers.HighScoreListing import HighScoreListing
+from helpers.Localisation import Localisation
 from helpers.Screen import Screen
 from helpers.TextDisplay import TextDisplay
 
@@ -16,9 +18,11 @@ class HighScore(Screen):
         self.pygame = pygame
         self.screen = screen
         self.display_manager = display_manager
+        self.localisation = Localisation()
+        self.assets = Assets()
 
         self.background_image = pygame.transform.scale(
-            pygame.image.load("assets/enigma.jpg"),
+            self.assets.background_image,
             (1024, 786)
         )
 
@@ -43,7 +47,7 @@ class HighScore(Screen):
             self.listings = {
                 "No scores!": TextDisplay(
                     screen=screen,
-                    text="Er zijn nog geen high scores!",
+                    text=self.localisation.current_language["no_scores"],
                     position=(0, 0),
                     text_color=(255, 255, 255)
                 )
@@ -62,8 +66,8 @@ class HighScore(Screen):
         self.buttons = dict()
         self.buttons["exit"] = Button(
             screen,
-            text="Back",
-            position=(925, 700),
+            text=self.localisation.current_language["back"],
+            position=(850, 700),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             font_size=36,

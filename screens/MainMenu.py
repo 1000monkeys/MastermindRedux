@@ -1,5 +1,7 @@
 import sys
 from unittest.mock import call
+from helpers.Assets import Assets
+from helpers.Localisation import Localisation
 from helpers.TextDisplay import TextDisplay
 from helpers.Button import Button
 from helpers.Screen import Screen
@@ -12,16 +14,18 @@ class MainMenu(Screen):
         self.pygame = pygame
         self.screen = screen
         self.display_manager = display_manager
+        self.localisation = Localisation()
+        self.assets = Assets()
 
         self.background_image = pygame.transform.scale(
-            pygame.image.load("assets/enigma.jpg"),
+            self.assets.background_image,
             (1024, 786)
         )
 
         self.texts = dict()
-        self.texts["header_text"] = TextDisplay(
+        self.texts["welcome"] = TextDisplay(
             screen,
-            text="Welcome to Mastermind, Challenge your brain!",
+            text=self.localisation.current_language["welcome"],
             position=(25, 25),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
@@ -34,7 +38,7 @@ class MainMenu(Screen):
         self.buttons = dict()
         self.buttons["play"] = Button(
             screen,
-            text="Play",
+            text=self.localisation.current_language["play"],
             position=(75, 150),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
@@ -45,7 +49,7 @@ class MainMenu(Screen):
 
         self.buttons["settings"] = Button(
             screen,
-            text="Settings",
+            text=self.localisation.current_language["settings"],
             position=(75, 250),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
@@ -57,7 +61,7 @@ class MainMenu(Screen):
 
         self.buttons["highscore"] = Button(
             screen,
-            text="Highscore",
+            text=self.localisation.current_language["highscore"],
             position=(75, 350),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
@@ -69,8 +73,8 @@ class MainMenu(Screen):
 
         self.buttons["exit"] = Button(
             screen,
-            text="Exit",
-            position=(925, 700),
+            text=self.localisation.current_language["exit"],
+            position=(850, 700),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             font_size=36,

@@ -1,3 +1,6 @@
+import pygame
+
+
 class Assets:
     def __init__(self) -> None:
-        pass
+        self.background_image = pygame.image.load("assets/enigma.jpg")

@@ -7,7 +7,7 @@ from screens.Settings import Settings
 from screens.HighScore import HighScore
 
 class DisplayManager:
-    def __init__(self, screen, localisation=None, setting_screen_positions=None, start_display_id=None) -> None:
+    def __init__(self, screen, setting_screen_positions, localisation=None, start_display_id=None) -> None:
         self.screen = screen
         if start_display_id is not None:
             self.screen_id = start_display_id
@@ -16,6 +16,7 @@ class DisplayManager:
 
         if localisation == None:
             self.localisation = Localisation(self)
+            self.localisation.set_language(setting_screen_positions["language_pos"])
         else:
             self.localisation = localisation
 
@@ -24,10 +25,7 @@ class DisplayManager:
         # Screen type to screen_id
         self.screens = list()
         self.screens.insert(0, MainMenu(self, screen, self.localisation, self.assets))
-        if setting_screen_positions is not None:
-            self.screens.insert(1, Settings(self, screen, self.localisation, self.assets, setting_screen_positions))
-        else:
-            self.screens.insert(1, Settings(self, screen, self.localisation, self.assets))
+        self.screens.insert(1, Settings(self, screen, self.localisation, self.assets, setting_screen_positions))
         self.screens.insert(2, HighScore(self, screen, self.localisation, self.assets))
 
     def get_current_screen_id(self):

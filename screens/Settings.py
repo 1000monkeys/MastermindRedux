@@ -15,7 +15,7 @@ from helpers.TextDisplay import TextDisplay
 from helpers.TextLoop import TextLoop
 
 class Settings(Screen):
-    def __init__(self, display_manager, screen, localisation, assets, setting_screen_positions=None) -> None:
+    def __init__(self, display_manager, screen, localisation, assets, setting_screen_positions) -> None:
         super().__init__()
         self.screen = screen
         self.display_manager = display_manager
@@ -158,27 +158,12 @@ class Settings(Screen):
             callback_function=self.back
         )
 
-        if setting_screen_positions is not None:
-            self.text_loops["language_loop"].set_option(self.localisation.current_language_id)
-            self.text_loops["amount_game_rounds_loop"].set_option(setting_screen_positions["game_rounds_pos"])
-            self.text_loops["time_guess_loop"].set_option(setting_screen_positions["time_guess_pos"])
-            self.text_loops["repeating_colors_loop"].set_option(setting_screen_positions["repeating_colors_pos"])
-            self.text_loops["empty_pins_loop"].set_option(setting_screen_positions["empty_pin_pos"])
-            self.text_loops["difficulty_loop"].set_option(setting_screen_positions["difficulty_pos"])
-        elif path.exists("settings.json"):
-            with open('settings.json') as f:
-                setting_screen_positions = json.load(f)
-                setting_screen_positions = collections.OrderedDict(sorted(setting_screen_positions.items(), key=itemgetter(1), reverse=True))
-                
-                self.text_loops["language_loop"].set_option(setting_screen_positions["language_pos"])
-                self.text_loops["amount_game_rounds_loop"].set_option(setting_screen_positions["game_rounds_pos"])
-                self.text_loops["time_guess_loop"].set_option(setting_screen_positions["time_guess_pos"])
-                self.text_loops["repeating_colors_loop"].set_option(setting_screen_positions["repeating_colors_pos"])
-                self.text_loops["empty_pins_loop"].set_option(setting_screen_positions["empty_pin_pos"])
-                self.text_loops["difficulty_loop"].set_option(setting_screen_positions["difficulty_pos"])
-
-                if setting_screen_positions["language_pos"] != 0:
-                    self.change_language()
+        self.text_loops["language_loop"].set_option(setting_screen_positions["language_pos"])
+        self.text_loops["amount_game_rounds_loop"].set_option(setting_screen_positions["game_rounds_pos"])
+        self.text_loops["time_guess_loop"].set_option(setting_screen_positions["time_guess_pos"])
+        self.text_loops["repeating_colors_loop"].set_option(setting_screen_positions["repeating_colors_pos"])
+        self.text_loops["empty_pins_loop"].set_option(setting_screen_positions["empty_pin_pos"])
+        self.text_loops["difficulty_loop"].set_option(setting_screen_positions["difficulty_pos"])
 
     def get_settings(self):
         language_pos = self.text_loops["language_loop"].get_option()
@@ -212,15 +197,13 @@ class Settings(Screen):
 
         if language_pos >= len(self.localisation.languages):
             language_pos = 0
-            
-        self.localisation.current_language_id = language_pos
-        self.localisation.current_language = self.localisation.languages[self.localisation.current_language_id]
 
-        positions = self.get_settings()
+        self.localisation.set_language(language_pos)
 
         # Has to be last! Reinits the screens so code after does not get run!!
+        self.save_settings()
         self.display_id = self.display_manager.get_current_screen_id()
-        self.display_manager.__init__(self.screen, self.localisation, setting_screen_positions=positions, start_display_id=self.display_id)
+        self.display_manager.__init__(self.screen, self.get_settings(), self.localisation, start_display_id=self.display_id)
 
     def merge_dict(self, *args):
         result = dict()

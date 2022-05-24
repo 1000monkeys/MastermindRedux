@@ -80,3 +80,7 @@ class Localisation:
         self.languages = {0: self.text_nl, 1: self.text_en}
         self.current_language_id = 0
         self.current_language = self.languages[self.current_language_id]
+
+    def set_language(self, language_pos):
+        self.current_language_id = language_pos
+        self.current_language = self.languages[self.current_language_id]

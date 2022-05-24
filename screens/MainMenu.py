@@ -16,7 +16,7 @@ class MainMenu(Screen):
         self.screen = screen
         self.display_manager = display_manager
         self.localisation = localisation
-        self.assets = Assets()
+        self.assets = assets
 
         self.background_image = pygame.transform.scale(
             self.assets.background_image,

@@ -1,18 +1,25 @@
+import collections
+import json
+from operator import itemgetter
+from os import path
 import pygame
 
 from helpers.DisplayManager import DisplayManager
 
 class Game():
     def __init__(self) -> None:
+        if path.exists("settings.json"):
+            with open('settings.json') as f:
+                setting_screen_positions = json.load(f)
+                setting_screen_positions = collections.OrderedDict(sorted(setting_screen_positions.items(), key=itemgetter(1), reverse=True))
+
         pygame.init()
 
         self.screen = pygame.display.set_mode((1024, 786))
         pygame.display.set_caption("Mastermind")
-        self.display_manager = DisplayManager(self.screen)
+        self.display_manager = DisplayManager(self.screen, setting_screen_positions)
 
     def run_loop(self):
-        ms_per_frame = 1000/60
-        last_frame_ms = 0
         while True:
             pygame.time.Clock().tick(30)
             current_display = self.display_manager.get_current_screen()

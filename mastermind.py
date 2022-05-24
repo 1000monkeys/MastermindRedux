@@ -2,15 +2,24 @@ import pygame
 
 from helpers.DisplayManager import DisplayManager
 
-pygame.init()
+class Game():
+    def __init__(self) -> None:
+        pygame.init()
 
-screen = pygame.display.set_mode((1024, 786))
-pygame.display.set_caption("Mastermind")
-display_manager = DisplayManager(pygame, screen)
+        self.screen = pygame.display.set_mode((1024, 786))
+        pygame.display.set_caption("Mastermind")
+        self.display_manager = DisplayManager(self.screen)
 
-while True:
-    current_display = display_manager.get_current_screen()
-    events = pygame.event.get()
-    current_display.handle_events(events)
-    current_display.draw()
-    pygame.display.flip()
+    def run_loop(self):
+        ms_per_frame = 1000/60
+        last_frame_ms = 0
+        while True:
+            pygame.time.Clock().tick(30)
+            current_display = self.display_manager.get_current_screen()
+            events = pygame.event.get()
+            current_display.handle_events(events)
+            current_display.draw()
+            pygame.display.flip()
+
+game = Game()
+game.run_loop()

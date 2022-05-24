@@ -3,6 +3,8 @@ import json
 from operator import contains, itemgetter
 from os import path
 import sys
+
+import pygame
 from helpers.Assets import Assets
 from helpers.Button import Button
 from helpers.Container import Container
@@ -13,13 +15,12 @@ from helpers.TextDisplay import TextDisplay
 
 
 class HighScore(Screen):
-    def __init__(self, pygame, screen, display_manager) -> None:
+    def __init__(self, display_manager, screen, localisation, assets) -> None:
         super().__init__()
-        self.pygame = pygame
         self.screen = screen
         self.display_manager = display_manager
-        self.localisation = Localisation()
-        self.assets = Assets()
+        self.localisation = localisation
+        self.assets = assets
 
         self.background_image = pygame.transform.scale(
             self.assets.background_image,

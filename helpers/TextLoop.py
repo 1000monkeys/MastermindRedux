@@ -4,7 +4,7 @@ from helpers.TextDisplay import TextDisplay
 
 
 class TextLoop:
-    def __init__(self, screen, texts, position, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0) -> None:
+    def __init__(self, screen, texts, position, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0, callback_function=None) -> None:
         self.screen = screen
         self.texts = texts
         self.position = position
@@ -14,6 +14,7 @@ class TextLoop:
         self.border_size = border_size
         self.padding = padding
         self.font_size = font_size
+        self.callback_function = callback_function
 
         self.current_option = 0
         self.text_displays = list()
@@ -23,13 +24,13 @@ class TextLoop:
         self.current_option = self.current_option + 1
         if self.current_option >= len(self.texts):
             self.current_option = 0
+        self.text_displays = list()
         self.create_text_displays()
 
     def get_text_displays(self):
         return self.text_displays
 
     def create_text_displays(self):
-        border_size = 10
         for i, text in enumerate(self.texts):
             self.text_displays.insert(i, TextDisplay(
                     screen=self.screen,
@@ -55,6 +56,7 @@ class TextLoop:
             return Exception("Option position higher than amount of options!")
 
         self.current_option = option_pos
+        self.text_displays = list()
         self.create_text_displays()
 
     def get_rect(self):
@@ -83,8 +85,14 @@ class TextLoop:
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.text_displays[self.current_option].get_rect().collidepoint(event.pos):
+                if self.callback_function is not None:
+                    if self.text_displays[self.current_option].rect.collidepoint(event.pos):
+                        self.next_option()
+                        self.callback_function()
+                elif self.text_displays[self.current_option].rect.collidepoint(event.pos):
                     self.next_option()
 
     def draw(self):
         self.text_displays[self.current_option].draw()
+
+            

@@ -1,5 +1,6 @@
 class Localisation:
-    def __init__(self) -> None:
+    def __init__(self, display_manager) -> None:
+        self.display_manager = display_manager
         self.text_nl = dict()
         self.text_en = dict()
 
@@ -9,7 +10,7 @@ class Localisation:
 
         # MainMenu
         self.text_nl["welcome"] = "Welkom op Mastermind, Daag je brein uit!"
-        self.text_en["Welcome"] = "Welcome to Mastermind, Challenge your brain!"
+        self.text_en["welcome"] = "Welcome to Mastermind, Challenge your brain!"
 
         self.text_nl["play"] = "Spelen"
         self.text_en["play"] = "Play"
@@ -17,16 +18,15 @@ class Localisation:
         self.text_nl["settings"] = "Instellingen"
         self.text_en["settings"] = "Settings"
 
-        self.text_nl["highscore"] = "Highscore"
-        self.text_en["highscore"] = self.text_nl["Highscore"]
+        self.text_nl["highscore"] = "Top score"
+        self.text_en["highscore"] = "High score"
 
         self.text_nl["exit"] = "Afsluiten"
         self.text_en["exit"] = "Exit"
 
         # HighScore
-        self.text_nl["no_scores"] = "Er zijn nog geen high scores!"
+        self.text_nl["no_scores"] = "Er zijn nog geen top scores!"
         self.text_en["no_scores"] = "There are no high scores yet!"
-
 
         # Settings
         self.text_nl["option_menu"] = "Optie menu:"
@@ -69,9 +69,14 @@ class Localisation:
         self.text_en["difficulty"] = "Change current difficulty settings to:"
 
         self.text_nl["difficulty_loop"] = ["Normaal", "Moeilijk"]
-        self.text_en["difficulty_loop"] = ["Normal", "Difficukt"]
+        self.text_en["difficulty_loop"] = ["Normal", "Difficult"]
 
         self.text_nl["score_list_info"] = "Huidige instellingen hebben GEEN top score lijst"
         self.text_en["score_list_info"] = "Current settings have NO high score list"
 
-        self.current_language = self.text_nl
+        self.text_nl["save_and_exit"] = "Opslaan en terug"
+        self.text_en["save_and_exit"] = "Save and go back"
+
+        self.languages = {0: self.text_nl, 1: self.text_en}
+        self.current_language_id = 0
+        self.current_language = self.languages[self.current_language_id]

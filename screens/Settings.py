@@ -1,26 +1,27 @@
-from ast import arg
 from cgitb import text
+import collections
 from gc import callbacks
-import sys
+import json
+from operator import itemgetter
+from os import path
 from turtle import back
 from typing import Text
-from helpers.Assets import Assets
+
+import pygame
 from helpers.Button import Button
 from helpers.Container import Container
-from helpers.Localisation import Localisation
 from helpers.Screen import Screen
 from helpers.TextDisplay import TextDisplay
 from helpers.TextLoop import TextLoop
 
 class Settings(Screen):
-    def __init__(self, pygame, screen, display_manager) -> None:
+    def __init__(self, display_manager, screen, localisation, assets, setting_screen_positions=None) -> None:
         super().__init__()
-        self.pygame = pygame
         self.screen = screen
         self.display_manager = display_manager
-        self.localisation = Localisation()
-        self.assets = Assets()
-
+        self.localisation = localisation
+        self.assets = assets
+        
         self.background_image = pygame.transform.scale(
             self.assets.background_image,
             (1024, 786)
@@ -56,7 +57,7 @@ class Settings(Screen):
             texts=self.localisation.current_language["language_loop"],
             position=(800, 175),
             font_size=36,
-            callback=self.change_language
+            callback_function=self.change_language
         )
 
         self.texts["amount_game_rounds"] = TextDisplay(
@@ -147,8 +148,8 @@ class Settings(Screen):
         self.buttons = dict()
         self.buttons["back"] = Button(
             screen,
-            text=self.localisation.current_language["back"],
-            position=(850, 700),
+            text=self.localisation.current_language["save_and_exit"],
+            position=(700, 700),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             border_size=5,
@@ -157,11 +158,69 @@ class Settings(Screen):
             callback_function=self.back
         )
 
+        if setting_screen_positions is not None:
+            self.text_loops["language_loop"].set_option(self.localisation.current_language_id)
+            self.text_loops["amount_game_rounds_loop"].set_option(setting_screen_positions["game_rounds_pos"])
+            self.text_loops["time_guess_loop"].set_option(setting_screen_positions["time_guess_pos"])
+            self.text_loops["repeating_colors_loop"].set_option(setting_screen_positions["repeating_colors_pos"])
+            self.text_loops["empty_pins_loop"].set_option(setting_screen_positions["empty_pin_pos"])
+            self.text_loops["difficulty_loop"].set_option(setting_screen_positions["difficulty_pos"])
+        elif path.exists("settings.json"):
+            with open('settings.json') as f:
+                setting_screen_positions = json.load(f)
+                setting_screen_positions = collections.OrderedDict(sorted(setting_screen_positions.items(), key=itemgetter(1), reverse=True))
+                
+                self.text_loops["language_loop"].set_option(setting_screen_positions["language_pos"])
+                self.text_loops["amount_game_rounds_loop"].set_option(setting_screen_positions["game_rounds_pos"])
+                self.text_loops["time_guess_loop"].set_option(setting_screen_positions["time_guess_pos"])
+                self.text_loops["repeating_colors_loop"].set_option(setting_screen_positions["repeating_colors_pos"])
+                self.text_loops["empty_pins_loop"].set_option(setting_screen_positions["empty_pin_pos"])
+                self.text_loops["difficulty_loop"].set_option(setting_screen_positions["difficulty_pos"])
+
+                if setting_screen_positions["language_pos"] != 0:
+                    self.change_language()
+
+    def get_settings(self):
+        language_pos = self.text_loops["language_loop"].get_option()
+        game_rounds_pos = self.text_loops["amount_game_rounds_loop"].get_option()
+        time_guess_pos = self.text_loops["time_guess_loop"].get_option()
+        repeating_colors_pos = self.text_loops["repeating_colors_loop"].get_option()
+        empty_pin_pos = self.text_loops["empty_pins_loop"].get_option()
+        difficulty_pos = self.text_loops["difficulty_loop"].get_option()
+
+        positions = {
+            "language_pos": language_pos,
+            "game_rounds_pos": game_rounds_pos,
+            "time_guess_pos": time_guess_pos,
+            "repeating_colors_pos": repeating_colors_pos,
+            "empty_pin_pos": empty_pin_pos,
+            "difficulty_pos": difficulty_pos
+        }
+
+        return positions
+
+    def save_settings(self):
+        with open('settings.json', 'w') as f:
+            f.write(json.dumps(self.get_settings()))
+
     def back(self):
+        self.save_settings()
         self.display_manager.change_screen(0)
 
     def change_language(self):
+        language_pos = self.text_loops["language_loop"].get_option()
 
+        if language_pos >= len(self.localisation.languages):
+            language_pos = 0
+            
+        self.localisation.current_language_id = language_pos
+        self.localisation.current_language = self.localisation.languages[self.localisation.current_language_id]
+
+        positions = self.get_settings()
+
+        # Has to be last! Reinits the screens so code after does not get run!!
+        self.display_id = self.display_manager.get_current_screen_id()
+        self.display_manager.__init__(self.screen, self.localisation, setting_screen_positions=positions, start_display_id=self.display_id)
 
     def merge_dict(self, *args):
         result = dict()

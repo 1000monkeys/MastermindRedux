@@ -1,5 +1,6 @@
 import pygame
 from helpers.Button import Button
+from helpers.MessageBox import MessageBox
 
 from helpers.Screen import Screen
 from helpers.ScreenEnum import ScreenEnum
@@ -33,11 +34,17 @@ class GameScreen(Screen):
             padding=5,
             callback_function=self.exit_button
         )
+        self.messageBox = None
 
     def exit_button(self):
         # Display text
-
-        self.display_manager.change_screen(ScreenEnum.MAIN_MENU.value)
+        self.messageBox = MessageBox(
+            self.screen,
+            "Are you sure you want to quit the game?",
+            "Yes",
+            "No"
+        )
+        # self.display_manager.change_screen(ScreenEnum.MAIN_MENU.value)
 
     def draw(self):
         self.screen.blit(self.background_image, [0,0])
@@ -45,6 +52,10 @@ class GameScreen(Screen):
 
         for key in self.buttons.keys():
             self.buttons[key].draw()
+
+        if self.messageBox is not None:
+            self.messageBox.draw()
+
 
     def handle_events(self, events):
         super().handle_events(events)

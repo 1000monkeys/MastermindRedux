@@ -1,8 +1,5 @@
 from cgitb import text
-import collections
-from gc import callbacks
 import json
-from operator import itemgetter
 from os import path
 from turtle import back
 from typing import Text
@@ -11,6 +8,7 @@ import pygame
 from helpers.Button import Button
 from helpers.Container import Container
 from helpers.Screen import Screen
+from helpers.StaticFunctions import StaticFunctions
 from helpers.TextDisplay import TextDisplay
 from helpers.TextLoop import TextLoop
 
@@ -135,7 +133,7 @@ class Settings(Screen):
             font_size=36
         )
 
-        self.merged_items = self.merge_dict(self.texts, self.text_loops)
+        self.merged_items = StaticFunctions.merge_dict(self.texts, self.text_loops)
         self.container = Container(
             screen,
             self.merged_items,
@@ -204,15 +202,6 @@ class Settings(Screen):
         self.save_settings()
         self.display_id = self.display_manager.get_current_screen_id()
         self.display_manager.__init__(self.screen, self.get_settings(), self.localisation, start_display_id=self.display_id)
-
-    def merge_dict(self, *args):
-        result = dict()
-        dict_count = 0
-        for dictionary in args:
-            for key in dictionary.keys():
-                result[str(dict_count) + "-" + str(key)] = dictionary[key]
-            dict_count = dict_count + 1
-        return result
 
     def draw(self):
         self.screen.blit(self.background_image, [0,0])

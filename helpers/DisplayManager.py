@@ -1,7 +1,7 @@
-from operator import index, indexOf
-from threading import local
 from helpers.Assets import Assets
 from helpers.Localisation import Localisation
+from helpers.ScreenEnum import ScreenEnum
+from screens.GameScreen import GameScreen
 from screens.MainMenu import MainMenu
 from screens.Settings import Settings
 from screens.HighScore import HighScore
@@ -23,10 +23,12 @@ class DisplayManager:
         self.assets = Assets()
 
         # Screen type to screen_id
-        self.screens = list()
-        self.screens.insert(0, MainMenu(self, screen, self.localisation, self.assets))
-        self.screens.insert(1, Settings(self, screen, self.localisation, self.assets, setting_screen_positions))
-        self.screens.insert(2, HighScore(self, screen, self.localisation, self.assets))
+        self.screens = {
+            ScreenEnum.MAIN_MENU.value: MainMenu(self, screen, self.localisation, self.assets),
+            ScreenEnum.SETTINGS.value: Settings(self, screen, self.localisation, self.assets, setting_screen_positions),
+            ScreenEnum.HIGH_SCORE.value: HighScore(self, screen, self.localisation, self.assets),
+            ScreenEnum.GAMESCREEN.value: GameScreen(self, screen, self.localisation, self.assets, setting_screen_positions)
+        }
 
     def get_current_screen_id(self):
         return self.screen_id
@@ -36,4 +38,3 @@ class DisplayManager:
 
     def change_screen(self, screen_id):
         self.screen_id = screen_id
-

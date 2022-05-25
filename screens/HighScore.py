@@ -17,13 +17,13 @@ from helpers.TextDisplay import TextDisplay
 class HighScore(Screen):
     def __init__(self, display_manager, screen, localisation, assets) -> None:
         super().__init__()
-        self.screen = screen
         self.display_manager = display_manager
+        self.screen = screen
         self.localisation = localisation
         self.assets = assets
 
         self.background_image = pygame.transform.scale(
-            self.assets.background_image,
+            self.assets.main_background_image,
             (1024, 786)
         )
 

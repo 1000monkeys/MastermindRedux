@@ -4,6 +4,7 @@ from unittest.mock import call
 import pygame
 from helpers.Assets import Assets
 from helpers.Localisation import Localisation
+from helpers.ScreenEnum import ScreenEnum
 from helpers.TextDisplay import TextDisplay
 from helpers.Button import Button
 from helpers.Screen import Screen
@@ -13,13 +14,13 @@ from screens.Settings import Settings
 class MainMenu(Screen):
     def __init__(self,  display_manager, screen, localisation, assets) -> None:
         super().__init__()
-        self.screen = screen
         self.display_manager = display_manager
+        self.screen = screen
         self.localisation = localisation
         self.assets = assets
 
         self.background_image = pygame.transform.scale(
-            self.assets.background_image,
+            self.assets.main_background_image,
             (1024, 786)
         )
 
@@ -45,7 +46,8 @@ class MainMenu(Screen):
             background_color=(55, 42, 34),
             font_size=36,
             border_size=5,
-            padding=5
+            padding=5,
+            callback_function=self.play_button
         )
 
         self.buttons["settings"] = Button(
@@ -88,10 +90,13 @@ class MainMenu(Screen):
         sys.exit()
 
     def setting_button(self):
-        self.display_manager.change_screen(1)
+        self.display_manager.change_screen(ScreenEnum.SETTINGS.value)
 
     def highscore_button(self):
-        self.display_manager.change_screen(2)
+        self.display_manager.change_screen(ScreenEnum.HIGH_SCORE.value)
+
+    def play_button(self):
+        self.display_manager.change_screen(ScreenEnum.GAMESCREEN.value)
 
     def draw(self):
         self.screen.blit(self.background_image, [0,0])

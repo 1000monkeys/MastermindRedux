@@ -53,7 +53,7 @@ class HighScore(Screen):
                     text_color=(255, 255, 255)
                 )
             }
-            self.listings["No scores!"].set_position((1024/2, 786/2))
+            self.listings["No scores!"].set_center_position((1024/2, 786/2))
         
         self.container = Container(
             screen,

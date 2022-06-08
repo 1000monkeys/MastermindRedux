@@ -21,6 +21,7 @@ class Container(UIElement):
         self.padding = padding
         self.calculate_size()
 
+
     def calculate_size(self):
         if len(self.items) > 0:
             self.max_position = (0, 0)
@@ -29,7 +30,7 @@ class Container(UIElement):
                 if isinstance(self.items[key], type(Container)):
                     raise Exception("Cannot put a container in a container!")
                 else:
-                    print(self.min_position)
+                    #print(self.min_position)
                     if self.items[key].get_rect()[0] < self.min_position[0]:
                         self.min_position = (self.items[key].get_rect()[0], self.min_position[1])
                     if self.items[key].get_rect()[1] < self.min_position[1]:
@@ -56,12 +57,15 @@ class Container(UIElement):
         else:
             raise Exception('Cannot have an empty container!')
         
+
     def add_item(self, item):
         self.items.append(item)
         self.calculate_size()
 
+
     def get_rect(self):
         return self.border_rect
+
 
     def draw(self):
         self.screen.fill(self.border_color, self.border_rect)
@@ -69,6 +73,7 @@ class Container(UIElement):
 
         for key in self.items.keys():
             self.items[key].draw()
+
 
     def handle_events(self):
         pass

@@ -1,8 +1,10 @@
+from email.message import Message
 from helpers.Assets import Assets
 from helpers.Localisation import Localisation
 from helpers.ScreenEnum import ScreenEnum
 from screens.GameScreen import GameScreen
 from screens.MainMenu import MainMenu
+from screens.MessageScreen import MessageScreen
 from screens.Settings import Settings
 from screens.HighScore import HighScore
 
@@ -22,6 +24,8 @@ class DisplayManager:
 
         self.assets = Assets()
 
+        self.message_screen = None
+
         # Screen type to screen_id
         self.screens = {
             ScreenEnum.MAIN_MENU.value: MainMenu(self, screen, self.localisation, self.assets),
@@ -30,11 +34,20 @@ class DisplayManager:
             ScreenEnum.GAMESCREEN.value: GameScreen(self, screen, self.localisation, self.assets, setting_screen_positions)
         }
 
-    def get_current_screen_id(self):
-        return self.screen_id
+    def set_message_screen(self, message_screen):
+        self.message_screen = message_screen
 
+    def get_current_screen_id(self):
+        if self.message_screen is None:
+            return self.screen_id
+        else:
+            return ScreenEnum.MESSAGESCREEN.value
+            
     def get_current_screen(self):
-        return self.screens[self.screen_id]
+        if self.message_screen is None:
+            return self.screens[self.screen_id]
+        else:
+            return self.message_screen
 
     def change_screen(self, screen_id):
         self.screen_id = screen_id

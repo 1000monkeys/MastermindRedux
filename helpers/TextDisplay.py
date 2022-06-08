@@ -25,6 +25,8 @@ class TextDisplay(UIElement):
                 self.font_width + self.padding * 2 + self.border_size * 2,
                 self.font_height + self.padding * 2 + self.border_size * 2
             )
+        else:
+            self.border_rect = None
 
         self.rect = pygame.Rect(
             self.position[0] - self.padding,
@@ -44,7 +46,9 @@ class TextDisplay(UIElement):
     def get_rect(self):
         return self.rect
 
-    def set_position(self, position):
+    def set_center_position(self, position):
+        if self.border_rect is not None:
+            self.border_rect.center = position
         self.rect.center = position
         self.text_rect.center = position
 

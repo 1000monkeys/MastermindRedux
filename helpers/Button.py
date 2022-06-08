@@ -60,6 +60,13 @@ class Button(UIElement):
     def get_rect(self):
         return self.rect
 
+    def set_center_position(self, position):
+        self.normal_rect.center = position
+        self.normal_border_rect.center = position
+        self.larger_rect.center = position
+        self.larger_border_rect.center = position
+        self.text_rect.center = position
+
     def draw(self):
         self.screen.fill(self.text_color, self.border_rect)
         self.screen.fill(self.background_color, self.rect)

@@ -9,6 +9,7 @@ from helpers.TextDisplay import TextDisplay
 from helpers.Button import Button
 from helpers.Screen import Screen
 from helpers.Button import Button
+from screens.GameScreen import GameScreen
 from screens.Settings import Settings
 
 class MainMenu(Screen):
@@ -96,6 +97,7 @@ class MainMenu(Screen):
         self.display_manager.change_screen(ScreenEnum.HIGH_SCORE.value)
 
     def play_button(self):
+        self.display_manager.screens[ScreenEnum.GAMESCREEN.value] = GameScreen(self.display_manager, self.screen, self.localisation, self.assets, self.display_manager.screens[ScreenEnum.SETTINGS.value].get_settings())
         self.display_manager.change_screen(ScreenEnum.GAMESCREEN.value)
 
     def draw(self):

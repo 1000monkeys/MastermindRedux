@@ -70,7 +70,6 @@ class Settings(Screen):
             position=(800, 225),
             font_size=36
         )
-
         
         self.texts["time_guess"] = TextDisplay(
             screen,

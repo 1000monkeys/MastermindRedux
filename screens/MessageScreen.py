@@ -49,6 +49,8 @@ class MessageScreen(Screen):
             padding=5,
             callback_function=self.left_option_callback
         )
+        self.buttons["left_option"].set_center_position((256, 700))
+
         self.buttons["right_option"] = Button(
             screen,
             text=self.right_option_text,
@@ -60,6 +62,7 @@ class MessageScreen(Screen):
             padding=5,
             callback_function=self.right_option_callback
         )
+        self.buttons["right_option"].set_center_position((768, 700))
 
     def draw(self):
         self.screen.blit(self.background_image, [0,0])

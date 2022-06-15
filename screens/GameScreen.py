@@ -99,12 +99,12 @@ class GameScreen(Screen):
                 column.append(ResultPin(screen, assets, (i, j)))
             self.result_array.append(column)
 
-        self.solution = [
-            randrange(6),
-            randrange(6),
-            randrange(6),
-            randrange(6)
-        ]
+        self.solution = []
+        while len(self.solution) != 4:
+            random = randrange(6)
+            if random not in self.solution:
+                self.solution.append(random)
+
         self.current_row = 0
 
         

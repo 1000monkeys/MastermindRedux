@@ -1,3 +1,4 @@
+from turtle import screensize
 import pygame
 from helpers.Button import Button
 from helpers.Screen import Screen
@@ -18,11 +19,6 @@ class MessageScreen(Screen):
 
         self.right_option_text = right_option_text
         self.right_option_callback = right_option_callback
-
-        self.background_image = pygame.transform.scale(
-            self.assets.main_background_image,
-            (1024, 786)
-        )
 
         self.texts = dict()
         self.texts["prompt_text"] = TextDisplay(
@@ -64,8 +60,12 @@ class MessageScreen(Screen):
         )
         self.buttons["right_option"].set_center_position((768, 700))
 
+        self.background = pygame.Surface((1024, 786))
+        self.background.set_alpha(128)
+        self.background.fill((0, 0, 0))
+
     def draw(self):
-        self.screen.blit(self.background_image, [0,0])
+        self.screen.blit(self.background, (0, 0))
 
         for key in self.texts.keys():
             self.texts[key].draw()

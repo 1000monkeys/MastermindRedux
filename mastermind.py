@@ -24,8 +24,13 @@ class Game():
             pygame.time.Clock().tick(30)
             current_display = self.display_manager.get_current_screen()
             events = pygame.event.get()
-            current_display.handle_events(events)
-            current_display.draw()
+            if self.display_manager.message_screen is None:
+                current_display.handle_events(events)
+                current_display.draw()
+            else:
+                current_display.draw()
+                self.display_manager.message_screen.draw()
+                self.display_manager.message_screen.handle_events(events)
             pygame.display.flip()
 
 game = Game()

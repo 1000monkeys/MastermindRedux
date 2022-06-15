@@ -38,16 +38,10 @@ class DisplayManager:
         self.message_screen = message_screen
 
     def get_current_screen_id(self):
-        if self.message_screen is None:
-            return self.screen_id
-        else:
-            return ScreenEnum.MESSAGESCREEN.value
+        return self.screen_id
             
     def get_current_screen(self):
-        if self.message_screen is None:
-            return self.screens[self.screen_id]
-        else:
-            return self.message_screen
+        return self.screens[self.screen_id]
 
     def change_screen(self, screen_id):
         self.screen_id = screen_id

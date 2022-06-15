@@ -1,3 +1,4 @@
+from calendar import c
 from random import randrange
 import pygame
 from helpers.Button import Button
@@ -157,11 +158,16 @@ class GameScreen(Screen):
         if changed or self.setting_screen_positions["empty_pin_pos"] == 1:
             black_pins = 0
             white_pins = 0
+            checked_colors = list()
             for column in range(self.columns):
-                if guessed_code[column] == self.solution[column]:
+                if guessed_code[column] == self.solution[column] and guessed_code[column] not in checked_colors:
                     black_pins = black_pins + 1
-                elif guessed_code[column] in self.solution:
+                    checked_colors.append(guessed_code[column])
+                    
+            for column in range(self.columns):
+                if guessed_code[column] in self.solution and guessed_code[column] not in checked_colors:
                     white_pins = white_pins + 1
+                    checked_colors.append(guessed_code[column])
 
             result_position = 0
             for i in range(black_pins):

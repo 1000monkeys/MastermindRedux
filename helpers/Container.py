@@ -1,6 +1,7 @@
 import sys
 from xml.dom.minicompat import EmptyNodeList
 import pygame
+from helpers.Button import Button
 from helpers.TextLoop import TextLoop
 from helpers.UIElement import UIElement
 
@@ -30,6 +31,8 @@ class Container(UIElement):
                 if isinstance(self.items[key], type(Container)):
                     raise Exception("Cannot put a container in a container!")
                 else:
+                    if isinstance(self.items[key], type(Button)):
+                        print("checked button")
                     #print(self.min_position)
                     if self.items[key].get_rect()[0] < self.min_position[0]:
                         self.min_position = (self.items[key].get_rect()[0], self.min_position[1])

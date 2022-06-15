@@ -61,7 +61,7 @@ class MessageScreen(Screen):
         self.buttons["right_option"].set_center_position((768, 700))
 
         self.background = pygame.Surface((1024, 786))
-        self.background.set_alpha(128)
+        self.background.set_alpha(195)
         self.background.fill((0, 0, 0))
 
     def draw(self):

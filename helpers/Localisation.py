@@ -13,6 +13,10 @@ class Localisation:
         self.moeilijkheid = {0: "Makkelijk", 1: "Normaal", 2: "Moeilijk"}
         self.difficulty = {0: "Easy", 1: "Normal", 2: "Difficult"}
 
+        self.time = {0: "None", 1: "15", 2: "30", 3:"60"}
+
+        self.game_rounds = {0: "1", 1: "2", 2: "3", 3: "4", 4: "5", 5: "10"}
+
         # Algemeen
         self.text_nl["back"] = "Terug"
         self.text_en["back"] = "Back"
@@ -57,12 +61,12 @@ class Localisation:
         self.text_en["amount_game_rounds"] = "Amount of game rounds:"
 
         self.text_nl["amount_game_rounds_loop"] = [
-            str(SettingsEnum.AmountGameRounds.value.ONE.value),
-            str(SettingsEnum.AmountGameRounds.value.TWO.value),
-            str(SettingsEnum.AmountGameRounds.value.THREE.value),
-            str(SettingsEnum.AmountGameRounds.value.FOUR.value),
-            str(SettingsEnum.AmountGameRounds.value.FIVE.value),
-            str(SettingsEnum.AmountGameRounds.value.TEN.value)
+            self.game_rounds[SettingsEnum.AmountGameRounds.value.ONE.value],
+            self.game_rounds[SettingsEnum.AmountGameRounds.value.TWO.value],
+            self.game_rounds[SettingsEnum.AmountGameRounds.value.THREE.value],
+            self.game_rounds[SettingsEnum.AmountGameRounds.value.FOUR.value],
+            self.game_rounds[SettingsEnum.AmountGameRounds.value.FIVE.value],
+            self.game_rounds[SettingsEnum.AmountGameRounds.value.TEN.value]
         ]
         self.text_en["amount_game_rounds_loop"] = self.text_nl["amount_game_rounds_loop"]
 
@@ -71,15 +75,15 @@ class Localisation:
 
         self.text_nl["time_guess_loop"] = [
             "Geen limiet",
-            str(SettingsEnum.TimeGuess.value.FIFTEEN.value) + " seconden",
-            str(SettingsEnum.TimeGuess.value.THIRTY.value) + " seconden",
-            str(SettingsEnum.TimeGuess.value.SIXTY.value) + " seconden"
+            self.time[SettingsEnum.TimeGuess.value.FIFTEEN.value] + " seconden",
+            self.time[SettingsEnum.TimeGuess.value.THIRTY.value] + " seconden",
+            self.time[SettingsEnum.TimeGuess.value.SIXTY.value] + " seconden"
         ]
         self.text_en["time_guess_loop"] = [
             "No limit",
-            str(SettingsEnum.TimeGuess.value.FIFTEEN.value) + " seconds",
-            str(SettingsEnum.TimeGuess.value.THIRTY.value) + " seconds",
-            str(SettingsEnum.TimeGuess.value.SIXTY.value) + " seconds"
+            self.time[SettingsEnum.TimeGuess.value.FIFTEEN.value] + " seconds",
+            self.time[SettingsEnum.TimeGuess.value.THIRTY.value] + " seconds",
+            self.time[SettingsEnum.TimeGuess.value.SIXTY.value] + " seconds"
         ]
 
         self.text_nl["repeating_colors"] = "Herhalende kleuren:"
@@ -112,17 +116,27 @@ class Localisation:
         self.text_nl["difficulty_loop"] = [
             self.moeilijkheid[SettingsEnum.Difficulty.value.EASY.value],
             self.moeilijkheid[SettingsEnum.Difficulty.value.NORMAL.value],
-            self.moeilijkheid[SettingsEnum.Difficulty.value.DIFFICULT.value],
+            self.moeilijkheid[SettingsEnum.Difficulty.value.HARD.value],
             
         ]
         self.text_en["difficulty_loop"] = [
             self.difficulty[SettingsEnum.Difficulty.value.EASY.value],
             self.difficulty[SettingsEnum.Difficulty.value.NORMAL.value],
-            self.difficulty[SettingsEnum.Difficulty.value.DIFFICULT.value],
+            self.difficulty[SettingsEnum.Difficulty.value.HARD.value],
         ]
 
-        self.text_nl["score_list_info"] = "Huidige instellingen hebben GEEN top score lijst"
-        self.text_en["score_list_info"] = "Current settings have NO high score list"
+        self.text_nl["score_list_info"] = {
+            0: "Huidige instellingen hebben GEEN top score lijst",
+            1: "Huidige instellingen hebben de MAKKELIJK top score lijst",
+            2: "Huidige instellingen hebben de NORMAAL top score lijst",
+            3: "Huidige instellingen hebben de MOEILIJK top score lijst"
+        }
+        self.text_en["score_list_info"] = {
+            0: "Current settings have NO high score list",
+            1: "Current settings have the MAKKELIJK high score list",
+            2: "Current settings have the NORMAAL high score list",
+            3: "Current settings have the MOEILIJK high score list"
+        }
 
         self.text_nl["save_and_exit"] = "Opslaan en terug"
         self.text_en["save_and_exit"] = "Save and go back"

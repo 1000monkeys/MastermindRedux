@@ -17,6 +17,8 @@ class Localisation:
 
         self.game_rounds = {0: "1", 1: "2", 2: "3", 3: "4", 4: "5", 5: "10"}
 
+        self.amount_pins = {0: "4", 1: "5", 2: "6"}
+
         # Algemeen
         self.text_nl["back"] = "Terug"
         self.text_en["back"] = "Back"
@@ -98,17 +100,11 @@ class Localisation:
             self.noYes[SettingsEnum.RepeatingColors.value.YES.value]
         ]
         
-        self.text_nl["empty_pins"] = "Lege pionnen:"
-        self.text_en["empty_pins"] = "Empty pins:"
+        self.text_nl["amount_pins"] = "Aantal pionnen:"
+        self.text_en["amount_pins"] = "Amount of pins:"
 
-        self.text_nl["empty_pins_loop"] = [
-            self.neeJa[SettingsEnum.EmptyPins.value.NO.value],
-            self.neeJa[SettingsEnum.EmptyPins.value.YES.value] 
-        ]
-        self.text_en["empty_pins_loop"] = [
-            self.noYes[SettingsEnum.EmptyPins.value.NO.value],
-            self.noYes[SettingsEnum.EmptyPins.value.YES.value]
-        ]
+        self.text_nl["amount_pins_loop"] = ["4", "5", "6"]
+        self.text_en["amount_pins_loop"] = self.text_nl["amount_pins_loop"]
 
         self.text_nl["difficulty"] = "Verander huidige moeilijkheids instellingen naar:"
         self.text_en["difficulty"] = "Change current difficulty settings to:"
@@ -140,6 +136,17 @@ class Localisation:
 
         self.text_nl["save_and_exit"] = "Opslaan en terug"
         self.text_en["save_and_exit"] = "Save and go back"
+
+        self.text_nl["game_description"] = "Het spel gaat als volgt: De speler plaatst links 4 verschillende kleuren pionnetjes. Nadat je je gok doorstuurt komt in het rechter gedeelte een aantal zwarte en/of witte pionnetjes. Of geen." + \
+        "Als je geen pionnen krijgt zijn alle kleuren en alle posities fout. Als je een zwarte pion krijgt betekent dat dat er een van de gekleurde pionnen op de juiste positie staat. Als je een witte pion krijgt " + \
+        "is de kleur juist maar de positie onjuist. Let op! De posities van de zwarte en witte pionnen zijn niet gelinkt aan de posities van de gegokte kleuren."
+        self.text_en["game_description"] = "TODO"
+
+        self.text_nl["start_game"] = "Start game!"
+        self.text_en["start_game"] = "Start game!"
+
+        self.text_nl["guess"] = "Guess!"
+        self.text_en["guess"] = "Guess!"
 
         self.languages = {0: self.text_nl, 1: self.text_en}
         self.current_language_id = 0

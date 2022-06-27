@@ -1,5 +1,5 @@
-from calendar import c
 from random import randrange
+import time
 import pygame
 from helpers.Button import Button
 from helpers.Pin import Pin
@@ -7,6 +7,7 @@ from helpers.ResultPin import ResultPin
 
 from helpers.Screen import Screen
 from helpers.ScreenEnum import ScreenEnum
+from helpers.SettingsEnum import SettingsEnum
 from helpers.TextDisplay import TextDisplay
 from screens.MessageScreen import MessageScreen
 
@@ -18,7 +19,16 @@ class GameScreen(Screen):
         self.assets = assets
         self.setting_screen_positions = setting_screen_positions
 
-        self.rows, self.columns = (14, 4)
+        self.amount_rounds = int(self.localisation.game_rounds[self.setting_screen_positions["game_rounds_pos"]])
+        self.amount_pins = int(self.localisation.amount_pins[self.setting_screen_positions["amount_pins_pos"]])
+        self.assets.arrows = pygame.transform.scale(self.assets.arrows, (64 + (32 * (6 - self.amount_pins)), 64))
+        self.time = self.localisation.time[self.setting_screen_positions["time_guess_pos"]]
+        if self.time == 'None':
+            self.time = 0
+        else:
+            self.time = int(self.time)
+    
+        self.rows, self.columns = (14, self.amount_pins)
 
         self.background_image = pygame.transform.scale(
             self.assets.main_background_image,
@@ -33,7 +43,7 @@ class GameScreen(Screen):
         self.buttons["exit"] = Button(
             screen,
             text=self.localisation.current_language["back"],
-            position=(850, 700),
+            position=(0, 0),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             font_size=36,
@@ -43,18 +53,19 @@ class GameScreen(Screen):
         )
         self.buttons["exit"].set_center_position((900, 700))
 
-        self.buttons["guess"] = Button(
+        self.buttons["guess_start"] = Button(
             screen,
-            text="Guess!",
-            position=(75, 700),
+            text=self.localisation.current_language["start_game"],
+            position=(0, 0),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             font_size=36,
             border_size=5,
             padding=5,
-            callback_function=self.end_turn
+            callback_function=self.start_game  
         )
-        self.buttons["guess"].set_center_position((230, 675))
+        self.buttons["guess_start"].set_center_position((384, 700))
+
 
         self.texts = dict()
         self.texts["header"] = TextDisplay(
@@ -68,14 +79,9 @@ class GameScreen(Screen):
             border_size=5,
             padding=25
         )
-        
-        text = "Het spel gaat als volgt: De speler plaatst links 4 verschillende kleuren pionnetjes. Nadat je je gok doorstuurt komt in het rechter gedeelte een aantal zwarte en/of witte pionnetjes. Of geen." + \
-        "Als je geen pionnen krijgt zijn alle kleuren en alle posities fout. Als je een zwarte pion krijgt betekent dat dat er een van de gekleurde pionnen op de juiste positie staat. Als je een witte pion krijgt " + \
-        "is de kleur juist maar de positie onjuist. Let op! De posities van de zwarte en witte pionnen zijn niet gelinkt aan de posities van de gegokte kleuren."
-
         self.texts["explanation"] = TextDisplay(
             screen,
-            text=text,
+            text=self.localisation.current_language["game_description"],
             position=(552, 200),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
@@ -85,30 +91,71 @@ class GameScreen(Screen):
             padding=25,
             width=430
         )
+        if self.time != 0:
+            self.texts["timer"] = TextDisplay(
+                screen,
+                text="0",
+                position=(0, 0),
+                text_color=(255, 255, 255),
+                background_color=(55, 42, 34),
+                border_color=(255, 255, 255),
+                font_size=48,
+                border_size=5,
+                padding=5,
+                width=50
+            )
+            self.texts["timer"].set_center_position((128, 700))
+        
+        self.create_pins()
+        self.create_solution()
 
+        self.current_row = 0
+        self.round = 0
+        self.start_time = 0
+        self.current_time = int(time.time())
+        self.game_started = False
+
+    def create_pins(self):
         self.pin_array = []
         for j in range(self.rows):
             column = []
             for i in range(self.columns):
-                column.append(Pin(screen, assets, (i, j)))
+                column.append(Pin(self.screen, self.assets, (i, j), max_pin=self.amount_pins + 2))
             self.pin_array.append(column)
 
         self.result_array = []
         for j in range(self.rows):
             column = []
             for i in range(self.columns):
-                column.append(ResultPin(screen, assets, (i, j)))
+                column.append(ResultPin(self.screen, self.assets, (i, j)))
             self.result_array.append(column)
 
+
+    def create_solution(self):
         self.solution = []
-        while len(self.solution) != 4:
-            random = randrange(6)
+        while len(self.solution) != self.amount_pins:
+            random = randrange(self.amount_pins + 2)
             if random not in self.solution:
                 self.solution.append(random)
+        print(self.solution)
 
-        self.current_row = 0
+    def start_game(self):
+        self.buttons["guess_start"] = Button(
+            self.screen,
+            text=self.localisation.current_language["guess"],
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            font_size=36,
+            border_size=5,
+            padding=5,
+            callback_function=self.end_turn
+        )
+        self.buttons["guess_start"].set_center_position((384, 700))
+        self.start_time = int(time.time())
+        self.game_started = True
+        self.round = 1
 
-        
     def exit_button(self):
         messageScreen = MessageScreen(
             self.display_manager,
@@ -131,6 +178,28 @@ class GameScreen(Screen):
             self.assets,
             self.setting_screen_positions
         )
+        self.buttons["guess_start"] = Button(
+            self.screen,
+            text=self.localisation.current_language["start_game"],
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            font_size=36,
+            border_size=5,
+            padding=5,
+            callback_function=self.end_turn
+        )
+        self.buttons["guess_start"].set_center_position((384, 700))
+        self.start_time = int(time.time())
+        self.game_started = False
+        self.display_manager.set_message_screen(None)
+
+    def next_round(self):
+        self.create_solution()
+        self.create_pins()
+        self.start_time = int(time.time())
+        self.round = self.round + 1
+        self.current_row = 0
         self.display_manager.set_message_screen(None)
 
     def exit_screen(self):
@@ -141,61 +210,131 @@ class GameScreen(Screen):
         self.display_manager.set_message_screen(None)
 
     def end_turn(self):
-        changed = True
-        for pin in self.pin_array[self.current_row]:
-            if not pin.changed:
-                changed = False
-        
-        guessed_code = [
-            self.pin_array[self.current_row][0].color,
-            self.pin_array[self.current_row][1].color,
-            self.pin_array[self.current_row][2].color,
-            self.pin_array[self.current_row][3].color
-        ]
+        guessed_code = list()
+        amount_pins = int(self.localisation.amount_pins[self.setting_screen_positions["amount_pins_pos"]])
+        for index in range(amount_pins):
+            guessed_code.append(self.pin_array[self.current_row][index].color)
 
+        print(guessed_code)
         print(self.solution)
 
-        if changed or self.setting_screen_positions["empty_pin_pos"] == 1:
-            black_pins = 0
-            white_pins = 0
-            checked_colors = list()
-            for column in range(self.columns):
-                if guessed_code[column] == self.solution[column] and guessed_code[column] not in checked_colors:
-                    black_pins = black_pins + 1
-                    checked_colors.append(guessed_code[column])
-                    
-            for column in range(self.columns):
-                if guessed_code[column] in self.solution and guessed_code[column] not in checked_colors:
-                    white_pins = white_pins + 1
-                    checked_colors.append(guessed_code[column])
+        black_pins = 0
+        white_pins = 0
+        checked_colors = list()
+        for column in range(self.columns):
+            if guessed_code[column] == self.solution[column] and guessed_code[column] not in checked_colors:
+                black_pins = black_pins + 1
+                checked_colors.append(guessed_code[column])
+                
+        for column in range(self.columns):
+            if guessed_code[column] in self.solution and guessed_code[column] not in checked_colors:
+                white_pins = white_pins + 1
+                checked_colors.append(guessed_code[column])
 
-            result_position = 0
-            for i in range(black_pins):
-                self.result_array[self.current_row][result_position].set_black()
-                result_position = result_position + 1
-            for i in range(white_pins):
-                self.result_array[self.current_row][result_position].set_white()
-                result_position = result_position + 1
-            self.current_row = self.current_row + 1
+        result_position = 0
+        for i in range(black_pins):
+            self.result_array[self.current_row][result_position].set_black()
+            result_position = result_position + 1
+        for i in range(white_pins):
+            self.result_array[self.current_row][result_position].set_white()
+            result_position = result_position + 1
+        self.current_row = self.current_row + 1
 
-            if guessed_code == self.solution:
+        if guessed_code == self.solution and self.amount_rounds == self.round and self.amount_rounds != 1:
+            message_screen = MessageScreen(
+                self.display_manager,
+                self.screen,
+                self.localisation,
+                self.assets,
+                "You finished the game! Good job!!",
+                "Another game!",
+                self.restart_game,
+                "Quit to main menu!",
+                self.exit_button
+            )
+            self.display_manager.set_message_screen(message_screen)
+        elif guessed_code == self.solution and (self.amount_rounds == 1 or self.amount_rounds == self.round):
+            message_screen = MessageScreen(
+                self.display_manager,
+                self.screen,
+                self.localisation,
+                self.assets,
+                "You won! Good job!!",
+                "Another game!",
+                self.restart_game,
+                "Quit to main menu!",
+                self.exit_button
+            )
+            self.display_manager.set_message_screen(message_screen)
+        elif self.current_row == 14:
+            if self.round != self.amount_rounds:
                 message_screen = MessageScreen(
                     self.display_manager,
                     self.screen,
                     self.localisation,
                     self.assets,
-                    "You won! Good job!!",
-                    "Another game!",
+                    "You lost, onto the next round!",
+                    "Next round!",
+                    self.next_round,
+                    "Quit to main menu!",
+                    self.exit_button
+                )
+                self.display_manager.set_message_screen(message_screen)
+            else:
+                message_screen = MessageScreen(
+                    self.display_manager,
+                    self.screen,
+                    self.localisation,
+                    self.assets,
+                    "You lost!!",
+                    "Restart game!",
                     self.restart_game,
                     "Quit to main menu!",
                     self.exit_button
                 )
-
                 self.display_manager.set_message_screen(message_screen)
+        elif guessed_code == self.solution and self.amount_rounds != self.round:
+            message_screen = MessageScreen(
+                self.display_manager,
+                self.screen,
+                self.localisation,
+                self.assets,
+                "You cracked it!!",
+                "Next round!",
+                self.next_round,
+                "Quit to main menu!",
+                self.exit_button
+            )
+            self.display_manager.set_message_screen(message_screen)
+        self.start_time = int(time.time())
+
+    def update_timer(self):
+        self.current_time = int(time.time())
+        if self.time != 0 and self.start_time + self.time < self.current_time:
+            self.end_turn()
+            self.start_time = int(time.time())
+
+        self.texts["timer"] = TextDisplay(
+            self.screen,
+            text=str(self.start_time + self.time - self.current_time),
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            border_color=(255, 255, 255),
+            font_size=48,
+            border_size=5,
+            padding=5
+        )
+        self.texts["timer"].set_center_position((128, 700))
 
     def draw(self):
         self.screen.blit(self.background_image, [0,0])
         self.screen.blit(self.game_background_image, [0, 0])
+
+        if self.game_started and self.time != 0:
+            self.update_timer()
+
+        self.screen.blit(self.assets.arrows, [220 - (32 * (6 - self.amount_pins)), 32 * self.current_row + 132])
 
         for key in self.buttons.keys():
             self.buttons[key].draw()
@@ -217,8 +356,9 @@ class GameScreen(Screen):
         for key in self.buttons.keys():
             self.buttons[key].handle_events(events)
 
-        for row in range(self.rows):
-            if row == self.current_row:
-                for col in range(self.columns):
-                    #print("row:" + str(row) + "col:" + str(col))
-                    self.pin_array[row][col].handle_events(events)
+        if self.game_started:
+            for row in range(self.rows):
+                if row == self.current_row:
+                    for col in range(self.columns):
+                        #print("row:" + str(row) + "col:" + str(col))
+                        self.pin_array[row][col].handle_events(events)

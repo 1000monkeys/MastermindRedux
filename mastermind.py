@@ -12,6 +12,13 @@ class Game():
             with open('settings.json') as f:
                 setting_screen_positions = json.load(f)
                 setting_screen_positions = collections.OrderedDict(sorted(setting_screen_positions.items(), key=itemgetter(1), reverse=True))
+        else:
+            setting_screen_positions = {
+                "language_pos": 0,
+                "game_rounds_pos": 0,
+                "time_guess_pos": 0,
+                "amount_pins_pos": 0
+            }
 
         pygame.init()
 

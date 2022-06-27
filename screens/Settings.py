@@ -24,6 +24,8 @@ class Settings(Screen):
         self.assets = assets
         self.setting_screen_positions = setting_screen_positions
         
+        self.font_size = 36
+
         self.background_image = pygame.transform.scale(
             self.assets.main_background_image,
             (1024, 786)
@@ -35,7 +37,7 @@ class Settings(Screen):
         self.texts["option_menu"] = TextDisplay(
             screen,
             text=self.localisation.current_language["option_menu"],
-            position=(50, 50),
+            position=(50, 45),
             text_color=(255, 255, 255),
             font_size=48
         )
@@ -43,87 +45,73 @@ class Settings(Screen):
         self.texts["description"] = TextDisplay(
             screen,
             text=self.localisation.current_language["description"],
-            position=(65, 125),
+            position=(65, 105),
             text_color=(255, 255, 255),
-            font_size=36
+            font_size=self.font_size
         )
 
         self.texts["language"] = TextDisplay(
             screen,
             text=self.localisation.current_language["language"],
-            position=(90, 175),
-            font_size=36
+            position=(90, 150),
+            font_size=self.font_size
         )
         self.text_loops["language_loop"] = TextLoop(
             screen,
             texts=self.localisation.current_language["language_loop"],
-            position=(800, 175),
-            font_size=36,
+            position=(800, 150),
+            font_size=self.font_size,
             callback_function=self.change_language
         )
 
         self.texts["amount_game_rounds"] = TextDisplay(
             screen,
             text=self.localisation.current_language["amount_game_rounds"],
-            position=(90, 225),
-            font_size=36
+            position=(90, 190),
+            font_size=self.font_size
         )       
         self.text_loops["amount_game_rounds_loop"] = TextLoop(
             screen,
             texts=self.localisation.current_language["amount_game_rounds_loop"],
-            position=(800, 225),
-            font_size=36,
+            position=(800, 190),
+            font_size=self.font_size,
             callback_function=self.update_difficulty
         )
         
         self.texts["time_guess"] = TextDisplay(
             screen,
             text=self.localisation.current_language["time_guess"],
-            position=(90, 275),
-            font_size=36
+            position=(90, 230),
+            font_size=self.font_size
         )
         self.text_loops["time_guess_loop"] = TextLoop(
             screen,
             texts=self.localisation.current_language["time_guess_loop"],
-            position=(800, 275),
-            font_size=36,
-            callback_function=self.update_difficulty
-        )
-
-        self.texts["repeating_colors"] = TextDisplay(
-            screen,
-            text=self.localisation.current_language["repeating_colors"],
-            position=(90, 325),
-            font_size=36
-        )
-        self.text_loops["repeating_colors_loop"] = TextLoop(
-            screen,
-            texts=self.localisation.current_language["repeating_colors_loop"],
-            position=(800, 325),
-            font_size=36,
+            position=(800, 230),
+            font_size=self.font_size,
             callback_function=self.update_difficulty
         )
 
 
-        self.texts["empty_pins"] = TextDisplay(
+        self.texts["amount_pins"] = TextDisplay(
             screen,
-            text=self.localisation.current_language["empty_pins"],
-            position=(90, 375),
-            font_size=36
+            text=self.localisation.current_language["amount_pins"],
+            position=(90, 270),
+            font_size=self.font_size
         )
-        self.text_loops["empty_pins_loop"] = TextLoop(
+        self.text_loops["amount_pins_loop"] = TextLoop(
             screen,
-            texts=self.localisation.current_language["empty_pins_loop"],
-            position=(800, 375),
-            font_size=36,
+            texts=self.localisation.current_language["amount_pins_loop"],
+            position=(800, 270),
+            font_size=self.font_size,
             callback_function=self.update_difficulty
         )
 
         self.texts["difficulty"] = TextDisplay(
             screen,
             text=self.localisation.current_language["difficulty"],
-            position=(65, 475),
-            font_size=36
+            position=(65, 315),
+            font_size=self.font_size
         )
         self.inner_buttons = dict()
         self.inner_buttons["easy_difficulty"] = Button(
@@ -134,10 +122,10 @@ class Settings(Screen):
             background_color=(0, 0, 0),
             border_size=5,
             padding=5,
-            font_size=36,
+            font_size=self.font_size,
             callback_function=self.easy
         )
-        self.inner_buttons["easy_difficulty"].set_center_position((256, 575))
+        self.inner_buttons["easy_difficulty"].set_center_position((256, 400))
         self.inner_buttons["normal_difficulty"] = Button(
             screen,
             text=self.localisation.moeilijkheid[SettingsEnum.Difficulty.value.NORMAL.value],
@@ -146,10 +134,10 @@ class Settings(Screen):
             background_color=(0, 0, 0),
             border_size=5,
             padding=5,
-            font_size=36,
+            font_size=self.font_size,
             callback_function=self.medium
         )
-        self.inner_buttons["normal_difficulty"].set_center_position((512, 575))
+        self.inner_buttons["normal_difficulty"].set_center_position((512, 400))
         self.inner_buttons["hard_difficulty"] = Button(
             screen,
             text=self.localisation.moeilijkheid[SettingsEnum.Difficulty.value.HARD.value],
@@ -158,16 +146,16 @@ class Settings(Screen):
             background_color=(0, 0, 0),
             border_size=5,
             padding=5,
-            font_size=36,
+            font_size=self.font_size,
             callback_function=self.hard
         )
-        self.inner_buttons["hard_difficulty"].set_center_position((768, 575))
+        self.inner_buttons["hard_difficulty"].set_center_position((768, 400))
 
         self.texts["score_list_info"] = TextDisplay(
             screen,
             text=self.localisation.current_language["score_list_info"][0],
-            position=(180, 625),
-            font_size=36
+            position=(120, 435),
+            font_size=self.font_size
         )
 
                                                     #   0           1               2
@@ -201,15 +189,13 @@ class Settings(Screen):
         language_pos = self.text_loops["language_loop"].get_option()
         game_rounds_pos = self.text_loops["amount_game_rounds_loop"].get_option()
         time_guess_pos = self.text_loops["time_guess_loop"].get_option()
-        repeating_colors_pos = self.text_loops["repeating_colors_loop"].get_option()
-        empty_pin_pos = self.text_loops["empty_pins_loop"].get_option()
+        amount_pins_pos = self.text_loops["amount_pins_loop"].get_option()
 
         positions = {
             "language_pos": language_pos,
             "game_rounds_pos": game_rounds_pos,
             "time_guess_pos": time_guess_pos,
-            "repeating_colors_pos": repeating_colors_pos,
-            "empty_pin_pos": empty_pin_pos
+            "amount_pins_pos": amount_pins_pos
         }
 
         return positions
@@ -217,23 +203,19 @@ class Settings(Screen):
     def get_difficulty(self):
         game_rounds_pos = self.text_loops["amount_game_rounds_loop"].get_option()
         time_guess_pos = self.text_loops["time_guess_loop"].get_option()
-        repeating_colors_pos = self.text_loops["repeating_colors_loop"].get_option()
-        empty_pin_pos = self.text_loops["empty_pins_loop"].get_option()
+        amount_pins_pos = self.text_loops["amount_pins_loop"].get_option()
  
         if game_rounds_pos == SettingsEnum.AmountGameRounds.value.ONE.value and \
             time_guess_pos == SettingsEnum.TimeGuess.value.NONE.value and \
-            repeating_colors_pos == SettingsEnum.RepeatingColors.value.NO.value and \
-            empty_pin_pos == SettingsEnum.EmptyPins.value.NO.value:
+            amount_pins_pos == SettingsEnum.AmountPins.value.FOUR.value:
                 return 1
         elif game_rounds_pos == SettingsEnum.AmountGameRounds.value.THREE.value and \
             time_guess_pos == SettingsEnum.TimeGuess.value.SIXTY.value and \
-            repeating_colors_pos == SettingsEnum.RepeatingColors.value.YES.value and \
-            empty_pin_pos == SettingsEnum.EmptyPins.value.NO.value:
+            amount_pins_pos == SettingsEnum.AmountPins.value.FIVE.value:
                 return 2
         elif game_rounds_pos == SettingsEnum.AmountGameRounds.value.FIVE.value and \
             time_guess_pos == SettingsEnum.TimeGuess.value.THIRTY.value and \
-            repeating_colors_pos == SettingsEnum.RepeatingColors.value.YES.value and \
-            empty_pin_pos == SettingsEnum.EmptyPins.value.YES.value:
+            amount_pins_pos == SettingsEnum.AmountPins.value.SIX.value:
                 return 3
         else:
             return 0
@@ -243,7 +225,7 @@ class Settings(Screen):
         self.container.items["0-score_list_info"] = TextDisplay(
             self.screen,
             text=self.localisation.current_language["score_list_info"][self.get_difficulty()],
-            position=(180, 625),
+            position=(120, 435),
             font_size=36
         )
 
@@ -254,8 +236,7 @@ class Settings(Screen):
             "language_pos": language_pos,
             "game_rounds_pos": SettingsEnum.AmountGameRounds.value.ONE.value,
             "time_guess_pos": SettingsEnum.TimeGuess.value.NONE.value,
-            "repeating_colors_pos": SettingsEnum.RepeatingColors.value.NO.value,
-            "empty_pin_pos": SettingsEnum.EmptyPins.value.NO.value
+            "amount_pins_pos": SettingsEnum.AmountPins.value.FOUR.value
         }
         self.set_settings(positions)
 
@@ -266,8 +247,7 @@ class Settings(Screen):
             "language_pos": language_pos,
             "game_rounds_pos": SettingsEnum.AmountGameRounds.value.THREE.value,
             "time_guess_pos": SettingsEnum.TimeGuess.value.SIXTY.value,
-            "repeating_colors_pos": SettingsEnum.RepeatingColors.value.YES.value,
-            "empty_pin_pos": SettingsEnum.EmptyPins.value.NO.value
+            "amount_pins_pos": SettingsEnum.AmountPins.value.FIVE.value
         }
         self.set_settings(positions)
 
@@ -278,8 +258,7 @@ class Settings(Screen):
             "language_pos": language_pos,
             "game_rounds_pos": SettingsEnum.AmountGameRounds.value.FIVE.value,
             "time_guess_pos": SettingsEnum.TimeGuess.value.THIRTY.value,
-            "repeating_colors_pos": SettingsEnum.RepeatingColors.value.YES.value,
-            "empty_pin_pos": SettingsEnum.EmptyPins.value.YES.value
+            "amount_pins_pos": SettingsEnum.AmountPins.value.SIX.value
         }
         self.set_settings(positions)
 
@@ -287,8 +266,7 @@ class Settings(Screen):
         self.text_loops["language_loop"].set_option(setting_screen_positions["language_pos"])
         self.text_loops["amount_game_rounds_loop"].set_option(setting_screen_positions["game_rounds_pos"])
         self.text_loops["time_guess_loop"].set_option(setting_screen_positions["time_guess_pos"])
-        self.text_loops["repeating_colors_loop"].set_option(setting_screen_positions["repeating_colors_pos"])
-        self.text_loops["empty_pins_loop"].set_option(setting_screen_positions["empty_pin_pos"])
+        self.text_loops["amount_pins_loop"].set_option(setting_screen_positions["amount_pins_pos"])
         self.update_difficulty()
 
     def save_settings(self):

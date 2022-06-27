@@ -9,7 +9,7 @@ class ResultPin:
 
         self.image = self.assets.empty_pin
 
-        self.position = (32 * position[0] + 280, 32 * position[1] + 150)
+        self.position = (32 * position[0] + 300, 32 * position[1] + 150)
         self.rect = pygame.Rect(self.position[0], self.position[1], 24, 24)
 
     def set_black(self):

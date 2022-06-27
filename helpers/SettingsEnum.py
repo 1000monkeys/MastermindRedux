@@ -24,9 +24,10 @@ class SettingsEnum(Enum):
         NO = 0
         YES = 1
 
-    class EmptyPins(Enum):
-        NO = 0
-        YES = 1
+    class AmountPins(Enum):
+        FOUR = 0
+        FIVE = 1
+        SIX = 2
     
     class Difficulty(Enum):
         EASY = 0

@@ -2,20 +2,22 @@ import pygame
 
 
 class Pin:
-    def __init__(self, screen, assets, position) -> None:
+    def __init__(self, screen, assets, position, max_pin) -> None:
         self.screen = screen
         self.assets = assets
         self.position = position
+        self.max_pin = max_pin
+
         self.changed = False
 
-        self.color = 0
+        self.color = -1
 
-        self.position = (32 * position[0] + 68, 32 * position[1] + 150)
+        self.position = (32 * position[0] + 25, 32 * position[1] + 150)
         self.rect = pygame.Rect(self.position[0], self.position[1], 24, 24)
 
     def next_color(self):
         if self.changed:
-            if self.color + 1 == len(self.assets.color_pins):
+            if self.color + 1 == self.max_pin:
                 self.color = 0
             else:
                 self.color = self.color + 1

@@ -140,7 +140,7 @@ class GameScreen(Screen):
             random = randrange(self.amount_pins + 2)
             if random not in self.solution:
                 self.solution.append(random)
-        print(self.solution)
+        print("Solution:" + str(self.solution))
 
     def start_game(self):
         self.buttons["guess_start"] = Button(
@@ -224,8 +224,7 @@ class GameScreen(Screen):
         for index in range(amount_pins):
             guessed_code.append(self.pin_array[self.current_row][index].color_pos)
 
-        print(guessed_code)
-        print(self.solution)
+        print("Guessed code:" + str(guessed_code))
 
         black_pins = 0
         white_pins = 0
@@ -369,5 +368,4 @@ class GameScreen(Screen):
             for row in range(self.rows):
                 if row == self.current_row:
                     for col in range(self.columns):
-                        #print("row:" + str(row) + "col:" + str(col))
                         self.pin_array[row][col].handle_events(events)

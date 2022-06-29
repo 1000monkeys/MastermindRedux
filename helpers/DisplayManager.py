@@ -31,7 +31,7 @@ class DisplayManager:
             ScreenEnum.MAIN_MENU.value: MainMenu(self, screen, self.localisation, self.assets),
             ScreenEnum.SETTINGS.value: Settings(self, screen, self.localisation, self.assets, setting_screen_positions),
             ScreenEnum.HIGH_SCORE.value: HighScore(self, screen, self.localisation, self.assets),
-            ScreenEnum.GAMESCREEN.value: GameScreen(self, screen, self.localisation, self.assets, setting_screen_positions)
+            ScreenEnum.GAMESCREEN.value: None
         }
 
     def set_message_screen(self, message_screen):

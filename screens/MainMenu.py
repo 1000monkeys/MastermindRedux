@@ -108,7 +108,6 @@ class MainMenu(Screen):
 
         for key in self.buttons.keys():
             self.buttons[key].draw()
-
         
     def handle_events(self, events):
         super().handle_events(events)
@@ -117,4 +116,3 @@ class MainMenu(Screen):
             self.buttons[key].handle_events(events)
 
         # for event in events:
-

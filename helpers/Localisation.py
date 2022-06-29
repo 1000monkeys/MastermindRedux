@@ -4,11 +4,18 @@ from helpers.SettingsEnum import SettingsEnum
 class Localisation:
     def __init__(self, display_manager) -> None:
         self.display_manager = display_manager
+
         self.text_nl = dict()
         self.text_en = dict()
 
         self.neeJa = {0: "Nee", 1: "Ja"}
         self.noYes = {0: "No", 1: "Yes"}
+
+        self.text_nl["no"] = self.neeJa[0]
+        self.text_en["no"] = self.noYes[0]
+
+        self.text_nl["yes"] = self.neeJa[1]
+        self.text_en["yes"] = self.noYes[1]
 
         self.moeilijkheid = {0: "Makkelijk", 1: "Normaal", 2: "Moeilijk"}
         self.difficulty = {0: "Easy", 1: "Normal", 2: "Difficult"}
@@ -146,7 +153,40 @@ class Localisation:
         self.text_en["start_game"] = "Start game!"
 
         self.text_nl["guess"] = "Guess!"
-        self.text_en["guess"] = "Guess!"
+        self.text_en["guess"] = self.text_nl["guess"]
+
+        self.text_nl["header"] = "Mastermind!"
+        self.text_en["header"] = self.text_nl["header"]
+
+        self.text_nl["quit_text"] = "Weet je zeker dat je wilt aflsuiten?"
+        self.text_en["quit_text"] = "Are you sure you want to quit?"
+
+        self.text_nl["finished_game"] = "Je hebt het spel uitgespeeld! Goed gedaan!!"
+        self.text_en["finished_game"] = "You finished the game! Good job!!"
+
+        self.text_nl["another_game"] = "Nog een spel!"
+        self.text_en["another_game"] = "Another game!"
+
+        self.text_nl["quit_to_menu"] = "Terug naar hoofd menu!"
+        self.text_en["quit_to_menu"] = "Quit to main menu!"
+
+        self.text_nl["you_won"] = "Je hebt gewonnen! Goed gedaan!" 
+        self.text_en["you_won"] = "You won! Good job!"
+
+        self.text_nl["lost_next_round"] = "Je hebt verloren, Op naar de volgende ronde!"
+        self.text_en["lost_next_round"] = "You lost, Onto the next round!"
+
+        self.text_nl["next_round"] = "Volgende ronde!"
+        self.text_en["next_round"] = "Next round!"
+
+        self.text_nl["lost"] = "Je hebt verloren!"
+        self.text_en["lost"] = "You lost!"
+
+        self.text_nl["restart"] = "Spel herstarten!"
+        self.text_en["restart"] = "Restart game!"
+
+        self.text_nl["you_won"] = "Je hebt het gekraakt! Op naar de volgende ronde!"
+        self.text_en["you_won"] = "You cracked it! Onto the next round!"
 
         self.languages = {0: self.text_nl, 1: self.text_en}
         self.current_language_id = 0

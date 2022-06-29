@@ -7,20 +7,20 @@ class Assets:
         self.game_background_image = pygame.image.load("assets/board.jpg")
 
         self.color_pins = [
-            pygame.image.load("assets/bluepin.bmp"),
-            pygame.image.load("assets/greenpin.bmp"),
-            pygame.image.load("assets/brownpin.bmp"),
-            pygame.image.load("assets/redpin.bmp"),
-            pygame.image.load("assets/greypin.bmp"),
-            pygame.image.load("assets/yellowpin.bmp"),
-            pygame.image.load("assets/maroonpin.bmp"),
-            pygame.image.load("assets/purplepin.bmp")
+            "#ffe119", #yellow
+            "#e6194B", #red
+            "#3cb44b", #green
+            "#911eb4", #purple
+            "#f58231", #orange
+            "#000075", #navy
+            "#42d4f4", #cyan
+            "#f032e6" #magenta
         ]
 
         self.arrows = pygame.image.load("assets/arrows.jpg")
         self.arrows = pygame.transform.scale(self.arrows, (64, 64))
 
-        self.black_pin = pygame.image.load("assets/blackpin.bmp")
-        self.white_pin = pygame.image.load("assets/whitepin.bmp")
-        self.empty_pin = pygame.image.load("assets/emptypin.bmp")
+        self.black = "#000000"
+        self.white = "#FFFFFF"
+        self.gray = "#808080"
 

@@ -21,7 +21,7 @@ class GameScreen(Screen):
 
         self.amount_rounds = int(self.localisation.game_rounds[self.setting_screen_positions["game_rounds_pos"]])
         self.amount_pins = int(self.localisation.amount_pins[self.setting_screen_positions["amount_pins_pos"]])
-        self.assets.arrows = pygame.transform.scale(self.assets.arrows, (64 + (32 * (6 - self.amount_pins)), 64))
+        self.assets.arrows = pygame.transform.scale(self.assets.arrows, (68 + (32 * (6 - self.amount_pins)), 60))
         self.time = self.localisation.time[self.setting_screen_positions["time_guess_pos"]]
         if self.time == 'None':
             self.time = 0
@@ -64,13 +64,16 @@ class GameScreen(Screen):
             padding=5,
             callback_function=self.start_game  
         )
-        self.buttons["guess_start"].set_center_position((384, 700))
+        if self.time != 0:
+            self.buttons["guess_start"].set_center_position((384, 700))
+        else:
+            self.buttons["guess_start"].set_center_position((256, 700))
 
 
         self.texts = dict()
         self.texts["header"] = TextDisplay(
             screen,
-            text="Mastermind!",
+            text=self.localisation.current_language["header"],
             position=(125, 50),
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
@@ -151,7 +154,10 @@ class GameScreen(Screen):
             padding=5,
             callback_function=self.end_turn
         )
-        self.buttons["guess_start"].set_center_position((384, 700))
+        if self.time != 0:
+            self.buttons["guess_start"].set_center_position((384, 700))
+        else:
+            self.buttons["guess_start"].set_center_position((256, 700))
         self.start_time = int(time.time())
         self.game_started = True
         self.round = 1
@@ -162,10 +168,10 @@ class GameScreen(Screen):
             self.screen,
             self.localisation,
             self.assets,
-            "Are you sure you want to quit?",
-            "Yes",
+            self.localisation.current_language["quit_text"],
+            self.localisation.current_language["yes"],
             self.exit_screen,
-            "No",
+            self.localisation.current_language["no"],
             self.stay_in_game
         )
         self.display_manager.set_message_screen(messageScreen)
@@ -189,7 +195,10 @@ class GameScreen(Screen):
             padding=5,
             callback_function=self.end_turn
         )
-        self.buttons["guess_start"].set_center_position((384, 700))
+        if self.time != 0:
+            self.buttons["guess_start"].set_center_position((384, 700))
+        else:
+            self.buttons["guess_start"].set_center_position((256, 700))
         self.start_time = int(time.time())
         self.game_started = False
         self.display_manager.set_message_screen(None)
@@ -213,7 +222,7 @@ class GameScreen(Screen):
         guessed_code = list()
         amount_pins = int(self.localisation.amount_pins[self.setting_screen_positions["amount_pins_pos"]])
         for index in range(amount_pins):
-            guessed_code.append(self.pin_array[self.current_row][index].color)
+            guessed_code.append(self.pin_array[self.current_row][index].color_pos)
 
         print(guessed_code)
         print(self.solution)
@@ -246,10 +255,10 @@ class GameScreen(Screen):
                 self.screen,
                 self.localisation,
                 self.assets,
-                "You finished the game! Good job!!",
-                "Another game!",
+                self.localisation.current_language["finished_game"],
+                self.localisation.current_language["another_game"],
                 self.restart_game,
-                "Quit to main menu!",
+                self.localisation.current_language["quit_to_menu"],
                 self.exit_button
             )
             self.display_manager.set_message_screen(message_screen)
@@ -259,10 +268,10 @@ class GameScreen(Screen):
                 self.screen,
                 self.localisation,
                 self.assets,
-                "You won! Good job!!",
-                "Another game!",
+                self.localisation.current_language["you_won"],
+                self.localisation.current_language["another_game"],
                 self.restart_game,
-                "Quit to main menu!",
+                self.localisation.current_language["quit_to_menu"],
                 self.exit_button
             )
             self.display_manager.set_message_screen(message_screen)
@@ -273,10 +282,10 @@ class GameScreen(Screen):
                     self.screen,
                     self.localisation,
                     self.assets,
-                    "You lost, onto the next round!",
-                    "Next round!",
+                    self.localisation.current_language["lost_next_round"],
+                    self.localisation.current_language["next_round"],
                     self.next_round,
-                    "Quit to main menu!",
+                    self.localisation.current_language["quit_to_menu"],
                     self.exit_button
                 )
                 self.display_manager.set_message_screen(message_screen)
@@ -286,10 +295,10 @@ class GameScreen(Screen):
                     self.screen,
                     self.localisation,
                     self.assets,
-                    "You lost!!",
-                    "Restart game!",
+                    self.localisation.current_language["lost"],
+                    self.localisation.current_language["restart"],
                     self.restart_game,
-                    "Quit to main menu!",
+                    self.localisation.current_language["quit_to_menu"],
                     self.exit_button
                 )
                 self.display_manager.set_message_screen(message_screen)
@@ -299,10 +308,10 @@ class GameScreen(Screen):
                 self.screen,
                 self.localisation,
                 self.assets,
-                "You cracked it!!",
-                "Next round!",
+                self.localisation.current_language["you_won"],
+                self.localisation.current_language["next_round"],
                 self.next_round,
-                "Quit to main menu!",
+                self.localisation.current_language["quit_to_menu"],
                 self.exit_button
             )
             self.display_manager.set_message_screen(message_screen)

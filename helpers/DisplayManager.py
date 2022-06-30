@@ -30,7 +30,7 @@ class DisplayManager:
         self.screens = {
             ScreenEnum.MAIN_MENU.value: MainMenu(self, screen, self.localisation, self.assets),
             ScreenEnum.SETTINGS.value: Settings(self, screen, self.localisation, self.assets, setting_screen_positions),
-            ScreenEnum.HIGH_SCORE.value: HighScore(self, screen, self.localisation, self.assets),
+            ScreenEnum.HIGH_SCORE.value: None,
             ScreenEnum.GAMESCREEN.value: None
         }
 

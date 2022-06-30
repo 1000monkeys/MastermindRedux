@@ -1,7 +1,13 @@
+import collections
+import json
+from operator import itemgetter
+from os import path
 from random import randrange
 import time
+from tkinter.font import NORMAL
 import pygame
 from helpers.Button import Button
+from helpers.DifficultyEnum import DifficultyEnum
 from helpers.Pin import Pin
 from helpers.ResultPin import ResultPin
 
@@ -102,21 +108,39 @@ class GameScreen(Screen):
                 text_color=(255, 255, 255),
                 background_color=(55, 42, 34),
                 border_color=(255, 255, 255),
-                font_size=48,
+                font_size=32,
                 border_size=5,
                 padding=5,
                 width=50
             )
             self.texts["timer"].set_center_position((128, 700))
         
+        self.difficulty = self.display_manager.screens[ScreenEnum.SETTINGS.value].get_difficulty()
+        if self.difficulty != 0:
+            self.texts["score"] = TextDisplay(
+                self.screen,
+                text="Score: " + str(0),
+                position=(0, 0),
+                text_color=(255, 255, 255),
+                background_color=(55, 42, 34),
+                border_color=(255, 255, 255),
+                font_size=32,
+                border_size=5,
+                padding=5
+            )
+            self.texts["score"].set_center_position((640, 700))
+
         self.create_pins()
         self.create_solution()
 
         self.current_row = 0
         self.round = 0
         self.start_time = 0
-        self.current_time = int(time.time())
+        self.score_start_time = 0
+        self.current_time = 0
         self.game_started = False
+        self.score = dict()
+        self.amount_rounds=1
 
     def create_pins(self):
         self.pin_array = []
@@ -159,8 +183,11 @@ class GameScreen(Screen):
         else:
             self.buttons["guess_start"].set_center_position((256, 700))
         self.start_time = int(time.time())
+        self.score_start_time = int(time.time())
         self.game_started = True
         self.round = 1
+        self.difficulty = self.display_manager.screens[ScreenEnum.SETTINGS.value].get_difficulty()
+        self.update_timer_text()
 
     def exit_button(self):
         messageScreen = MessageScreen(
@@ -200,12 +227,14 @@ class GameScreen(Screen):
         else:
             self.buttons["guess_start"].set_center_position((256, 700))
         self.start_time = int(time.time())
+        self.score_start_time = int(time.time())
         self.game_started = False
         self.display_manager.set_message_screen(None)
 
     def next_round(self):
         self.create_solution()
         self.create_pins()
+        self.game_started = True
         self.start_time = int(time.time())
         self.round = self.round + 1
         self.current_row = 0
@@ -217,6 +246,19 @@ class GameScreen(Screen):
 
     def stay_in_game(self):
         self.display_manager.set_message_screen(None)
+
+    def calculate_score(self):
+        temp_score = (14 - self.current_row) * 100
+        
+        if self.difficulty == DifficultyEnum.NORMAL.value:
+            temp_score = temp_score + ((14 - self.current_row) * 50)
+        if self.difficulty == DifficultyEnum.DIFFICULT.value:
+            temp_score = temp_score + ((14 - self.current_row) * 50)
+        
+        if self.time != 0:
+            temp_score = round((temp_score / self.time) * ((self.time * 14 + 14) - (self.current_time - self.score_start_time)))
+
+        self.score[self.round] = temp_score
 
     def end_turn(self):
         guessed_code = list()
@@ -246,35 +288,23 @@ class GameScreen(Screen):
         for i in range(white_pins):
             self.result_array[self.current_row][result_position].set_white()
             result_position = result_position + 1
-        self.current_row = self.current_row + 1
 
-        if guessed_code == self.solution and self.amount_rounds == self.round and self.amount_rounds != 1:
+        if guessed_code == self.solution and self.amount_rounds == self.round:
             message_screen = MessageScreen(
                 self.display_manager,
                 self.screen,
                 self.localisation,
                 self.assets,
-                self.localisation.current_language["finished_game"],
+                self.localisation.current_language["you_won"] + " Score is " + str(self.score[self.round]),
                 self.localisation.current_language["another_game"],
                 self.restart_game,
                 self.localisation.current_language["quit_to_menu"],
                 self.exit_button
             )
             self.display_manager.set_message_screen(message_screen)
-        elif guessed_code == self.solution and (self.amount_rounds == 1 or self.amount_rounds == self.round):
-            message_screen = MessageScreen(
-                self.display_manager,
-                self.screen,
-                self.localisation,
-                self.assets,
-                self.localisation.current_language["you_won"],
-                self.localisation.current_language["another_game"],
-                self.restart_game,
-                self.localisation.current_language["quit_to_menu"],
-                self.exit_button
-            )
-            self.display_manager.set_message_screen(message_screen)
-        elif self.current_row == 14:
+            self.game_started = False
+            self.update_score()
+        elif self.current_row == 13 and guessed_code != self.solution:
             if self.round != self.amount_rounds:
                 message_screen = MessageScreen(
                     self.display_manager,
@@ -288,6 +318,7 @@ class GameScreen(Screen):
                     self.exit_button
                 )
                 self.display_manager.set_message_screen(message_screen)
+                self.game_started = False
             else:
                 message_screen = MessageScreen(
                     self.display_manager,
@@ -301,22 +332,47 @@ class GameScreen(Screen):
                     self.exit_button
                 )
                 self.display_manager.set_message_screen(message_screen)
+                self.game_started = False
         elif guessed_code == self.solution and self.amount_rounds != self.round:
             message_screen = MessageScreen(
                 self.display_manager,
                 self.screen,
                 self.localisation,
                 self.assets,
-                self.localisation.current_language["you_won"],
+                self.localisation.current_language["you_won"] + " Score is " + str(self.score[self.round]),
                 self.localisation.current_language["next_round"],
                 self.next_round,
                 self.localisation.current_language["quit_to_menu"],
                 self.exit_button
             )
             self.display_manager.set_message_screen(message_screen)
-        self.start_time = int(time.time())
+            self.game_started = False
+        else:
+            self.calculate_score()
+            self.current_row = self.current_row + 1
+            self.start_time = int(time.time())
 
-    def update_timer(self):
+    def update_score(self):
+        scores = self.open_score()
+
+        temp_score = 0
+        for score in self.score:
+            temp_score = temp_score + self.score[score]
+
+        scores[self.setting_screen_positions["name"]] = temp_score
+        with open(str(self.difficulty) + 'high_scores.json', 'w') as f:
+            f.write(json.dumps(scores))
+
+    def open_score(self):
+        if path.exists(str(self.difficulty) + "high_scores.json"):
+            with open('high_scores.json') as f:
+                scores = json.load(f)
+                scores = collections.OrderedDict(scores)
+                return scores
+        else:
+            return collections.OrderedDict()
+
+    def update_timer_text(self):
         self.current_time = int(time.time())
         if self.time != 0 and self.start_time + self.time < self.current_time:
             self.end_turn()
@@ -329,18 +385,39 @@ class GameScreen(Screen):
             text_color=(255, 255, 255),
             background_color=(55, 42, 34),
             border_color=(255, 255, 255),
-            font_size=48,
+            font_size=32,
             border_size=5,
             padding=5
         )
         self.texts["timer"].set_center_position((128, 700))
 
+    def update_score_text(self): 
+        self.calculate_score()
+
+        temp_score = 0
+        for score in self.score:
+            temp_score = temp_score + self.score[score]
+
+        self.texts["score"] = TextDisplay(
+            self.screen,
+            text="Score: " + str(temp_score),
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            border_color=(255, 255, 255),
+            font_size=32,
+            border_size=5,
+            padding=5
+        )
+        self.texts["score"].set_center_position((640, 700))
+
     def draw(self):
         self.screen.blit(self.background_image, [0,0])
         self.screen.blit(self.game_background_image, [0, 0])
 
-        if self.game_started and self.time != 0:
-            self.update_timer()
+        if self.game_started:
+            self.update_timer_text()
+            self.update_score_text()
 
         self.screen.blit(self.assets.arrows, [220 - (32 * (6 - self.amount_pins)), 32 * self.current_row + 132])
 

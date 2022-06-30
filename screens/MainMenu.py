@@ -10,6 +10,7 @@ from helpers.Button import Button
 from helpers.Screen import Screen
 from helpers.Button import Button
 from screens.GameScreen import GameScreen
+from screens.HighScore import HighScore
 from screens.Settings import Settings
 
 class MainMenu(Screen):
@@ -94,6 +95,7 @@ class MainMenu(Screen):
         self.display_manager.change_screen(ScreenEnum.SETTINGS.value)
 
     def highscore_button(self):
+        self.display_manager.screens[ScreenEnum.HIGH_SCORE.value] = HighScore(self.display_manager, self.screen, self.localisation, self.assets)
         self.display_manager.change_screen(ScreenEnum.HIGH_SCORE.value)
 
     def play_button(self):
@@ -114,5 +116,3 @@ class MainMenu(Screen):
 
         for key in self.buttons.keys():
             self.buttons[key].handle_events(events)
-
-        # for event in events:

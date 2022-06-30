@@ -138,5 +138,5 @@ class TextDisplay(UIElement):
                 self.screen.fill(self.background_color, self.rect)
             self.screen.blit(self.surface, self.text_rect)
 
-    def handle_events(self):
+    def handle_events(self, events):
         pass

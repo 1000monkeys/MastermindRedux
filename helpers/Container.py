@@ -62,10 +62,8 @@ class Container(UIElement):
         self.items.append(item)
         self.calculate_size()
 
-
     def get_rect(self):
         return self.border_rect
-
 
     def draw(self):
         self.screen.fill(self.border_color, self.border_rect)
@@ -74,6 +72,6 @@ class Container(UIElement):
         for key in self.items.keys():
             self.items[key].draw()
 
-
-    def handle_events(self):
-        pass
+    def handle_events(self, events):
+        for key in self.items.keys():
+            self.items[key].handle_events(events)

@@ -11,7 +11,6 @@ class Game():
         if path.exists("settings.json"):
             with open('settings.json') as f:
                 setting_screen_positions = json.load(f)
-                setting_screen_positions = collections.OrderedDict(sorted(setting_screen_positions.items(), key=itemgetter(1), reverse=True))
         else:
             setting_screen_positions = {
                 "language_pos": 0,

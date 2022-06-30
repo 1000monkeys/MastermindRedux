@@ -13,6 +13,7 @@ from helpers.ScreenEnum import ScreenEnum
 from helpers.SettingsEnum import SettingsEnum
 from helpers.StaticFunctions import StaticFunctions
 from helpers.TextDisplay import TextDisplay
+from helpers.TextInput import TextInput
 from helpers.TextLoop import TextLoop
 
 class Settings(Screen):
@@ -32,8 +33,6 @@ class Settings(Screen):
         )
 
         self.texts = dict()
-        self.text_loops = dict()
-
         self.texts["option_menu"] = TextDisplay(
             screen,
             text=self.localisation.current_language["option_menu"],
@@ -56,6 +55,8 @@ class Settings(Screen):
             position=(90, 150),
             font_size=self.font_size
         )
+
+        self.text_loops = dict()
         self.text_loops["language_loop"] = TextLoop(
             screen,
             texts=self.localisation.current_language["language_loop"],
@@ -154,12 +155,34 @@ class Settings(Screen):
         self.texts["score_list_info"] = TextDisplay(
             screen,
             text=self.localisation.current_language["score_list_info"][0],
-            position=(120, 435),
+            position=(120, 445),
             font_size=self.font_size
         )
 
-                                                    #   0           1               2
-        self.merged_items = StaticFunctions.merge_dict(self.texts, self.text_loops, self.inner_buttons)
+        self.texts["name"] = TextDisplay(
+            screen,
+            text="Name:",
+            position=(120, 500),
+            font_size=48
+        )
+        self.texts["name_info"] = TextDisplay(
+            screen,
+            text="Min 1, Max 10. Type to enter!",
+            position=(120, 550),
+            font_size=32
+        )
+ 
+        self.inputs = dict()
+        self.inputs["name"] = TextInput(
+            self.screen,
+            text="KjevoKjevo",
+            position=(240, 500),
+            text_color=(255, 255, 255),
+            max=10
+        )
+
+                                                    #   0           1               2                   4
+        self.merged_items = StaticFunctions.merge_dict(self.texts, self.text_loops, self.inner_buttons, self.inputs)
         self.container = Container(
             screen,
             self.merged_items,
@@ -190,12 +213,14 @@ class Settings(Screen):
         game_rounds_pos = self.text_loops["amount_game_rounds_loop"].get_option()
         time_guess_pos = self.text_loops["time_guess_loop"].get_option()
         amount_pins_pos = self.text_loops["amount_pins_loop"].get_option()
+        name = self.inputs["name"].get_input()
 
         positions = {
             "language_pos": language_pos,
             "game_rounds_pos": game_rounds_pos,
             "time_guess_pos": time_guess_pos,
-            "amount_pins_pos": amount_pins_pos
+            "amount_pins_pos": amount_pins_pos,
+            "name": name
         }
 
         return positions
@@ -208,57 +233,63 @@ class Settings(Screen):
         if game_rounds_pos == SettingsEnum.AmountGameRounds.value.ONE.value and \
             time_guess_pos == SettingsEnum.TimeGuess.value.NONE.value and \
             amount_pins_pos == SettingsEnum.AmountPins.value.FOUR.value:
-                return 1
+                return 0
         elif game_rounds_pos == SettingsEnum.AmountGameRounds.value.THREE.value and \
             time_guess_pos == SettingsEnum.TimeGuess.value.SIXTY.value and \
             amount_pins_pos == SettingsEnum.AmountPins.value.FIVE.value:
-                return 2
+                return 1
         elif game_rounds_pos == SettingsEnum.AmountGameRounds.value.FIVE.value and \
             time_guess_pos == SettingsEnum.TimeGuess.value.THIRTY.value and \
             amount_pins_pos == SettingsEnum.AmountPins.value.SIX.value:
-                return 3
+                return 2
         else:
-            return 0
+            return -1
 
     def update_difficulty(self):
         # prelead by a number on how many of the dicts it is in merged items function call
         self.container.items["0-score_list_info"] = TextDisplay(
             self.screen,
             text=self.localisation.current_language["score_list_info"][self.get_difficulty()],
-            position=(120, 435),
+            position=(120, 445),
             font_size=36
         )
 
     def easy(self):
         language_pos = self.text_loops["language_loop"].get_option()
+        name = self.inputs["name"].get_input()
 
         positions = {
             "language_pos": language_pos,
             "game_rounds_pos": SettingsEnum.AmountGameRounds.value.ONE.value,
             "time_guess_pos": SettingsEnum.TimeGuess.value.NONE.value,
-            "amount_pins_pos": SettingsEnum.AmountPins.value.FOUR.value
+            "amount_pins_pos": SettingsEnum.AmountPins.value.FOUR.value,
+            "name": name
         }
         self.set_settings(positions)
 
     def medium(self):
         language_pos = self.text_loops["language_loop"].get_option()
+        name = self.inputs["name"].get_input()
 
         positions = {
             "language_pos": language_pos,
             "game_rounds_pos": SettingsEnum.AmountGameRounds.value.THREE.value,
             "time_guess_pos": SettingsEnum.TimeGuess.value.SIXTY.value,
-            "amount_pins_pos": SettingsEnum.AmountPins.value.FIVE.value
+            "amount_pins_pos": SettingsEnum.AmountPins.value.FIVE.value,
+            "name": name
         }
         self.set_settings(positions)
 
     def hard(self):
         language_pos = self.text_loops["language_loop"].get_option()
+        name = self.inputs["name"].get_input()
 
         positions = {
             "language_pos": language_pos,
             "game_rounds_pos": SettingsEnum.AmountGameRounds.value.FIVE.value,
             "time_guess_pos": SettingsEnum.TimeGuess.value.THIRTY.value,
-            "amount_pins_pos": SettingsEnum.AmountPins.value.SIX.value
+            "amount_pins_pos": SettingsEnum.AmountPins.value.SIX.value,
+            "name": name
         }
         self.set_settings(positions)
 
@@ -267,6 +298,7 @@ class Settings(Screen):
         self.text_loops["amount_game_rounds_loop"].set_option(setting_screen_positions["game_rounds_pos"])
         self.text_loops["time_guess_loop"].set_option(setting_screen_positions["time_guess_pos"])
         self.text_loops["amount_pins_loop"].set_option(setting_screen_positions["amount_pins_pos"])
+        self.inputs["name"].set_input(setting_screen_positions["name"])
         self.update_difficulty()
 
     def save_settings(self):
@@ -292,18 +324,8 @@ class Settings(Screen):
 
     def draw(self):
         self.screen.blit(self.background_image, [0,0])
+        
         self.container.draw()
-
-        """
-        for key in self.texts.keys():
-            self.texts[key].draw()
-        """
-
-        for key in self.text_loops.keys():
-            self.text_loops[key].draw()
-
-        for key in self.inner_buttons.keys():
-            self.inner_buttons[key].draw()
 
         for key in self.buttons.keys():
             self.buttons[key].draw()
@@ -311,12 +333,7 @@ class Settings(Screen):
     def handle_events(self, events):
         super().handle_events(events)
 
+        self.container.handle_events(events)
+
         for key in self.buttons.keys():
             self.buttons[key].handle_events(events)
-
-        for key in self.inner_buttons.keys():
-            self.inner_buttons[key].handle_events(events)
-
-        for key in self.text_loops.keys():
-            self.text_loops[key].handle_events(events)
-        # for event in events:

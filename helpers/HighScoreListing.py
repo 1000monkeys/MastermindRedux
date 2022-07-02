@@ -5,11 +5,11 @@ from helpers.Container import Container
 from helpers.TextDisplay import TextDisplay
 
 class HighScoreListing:
-    def __init__(self, screen, left_text, right_text, index, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0) -> None:
+    def __init__(self, screen, left_text, right_text, position, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0) -> None:
         self.screen = screen
         self.left_text = left_text
         self.right_text = right_text
-        self.index = index
+        self.position = position
         self.text_color = text_color
         self.background_color = background_color
         self.border_color = border_color
@@ -21,12 +21,12 @@ class HighScoreListing:
         self.texts["left"] = TextDisplay(
             screen,
             text=self.left_text,
-            position=(71, 56 + self.index * 75)
+            position=position
         )
         self.texts["right"] = TextDisplay(
             screen,
             text=self.right_text,
-            position=(871, 56 + self.index * 75)
+            position=(position[0] + 800, position[1])
         )
 
         #self.merged_items = StaticFunctions.merge_dict(self.texts, self.text_loops, self.inner_buttons)
@@ -43,8 +43,7 @@ class HighScoreListing:
         return self.container.rect
 
     def draw(self):
-        for key in self.texts.keys():
-            self.texts[key].draw()
+        self.container.draw()
 
     def handle_events(self, events):
         pass

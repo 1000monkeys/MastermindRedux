@@ -59,7 +59,7 @@ class GameScreen(Screen):
         )
         self.buttons["exit"].set_center_position((900, 700))
 
-        self.buttons["guess_start"] = Button(
+        self.guess_start = Button(
             screen,
             text=self.localisation.current_language["start_game"],
             position=(0, 0),
@@ -70,10 +70,7 @@ class GameScreen(Screen):
             padding=5,
             callback_function=self.start_game  
         )
-        if self.time != 0:
-            self.buttons["guess_start"].set_center_position((384, 700))
-        else:
-            self.buttons["guess_start"].set_center_position((256, 700))
+        self.guess_start.set_center_position((256, 393))
 
 
         self.texts = dict()
@@ -130,6 +127,10 @@ class GameScreen(Screen):
             )
             self.texts["score"].set_center_position((640, 700))
 
+        self.alpha_background = pygame.Surface((512, 786))
+        self.alpha_background.set_alpha(195)
+        self.alpha_background.fill((0, 0, 0))
+
         self.create_pins()
         self.create_solution()
 
@@ -167,7 +168,7 @@ class GameScreen(Screen):
         print("Solution:" + str(self.solution))
 
     def start_game(self):
-        self.buttons["guess_start"] = Button(
+        self.guess_start = Button(
             self.screen,
             text=self.localisation.current_language["guess"],
             position=(0, 0),
@@ -179,15 +180,16 @@ class GameScreen(Screen):
             callback_function=self.end_turn
         )
         if self.time != 0:
-            self.buttons["guess_start"].set_center_position((384, 700))
+            self.guess_start.set_center_position((384, 700))
         else:
-            self.buttons["guess_start"].set_center_position((256, 700))
+            self.guess_start.set_center_position((256, 700))
         self.start_time = int(time.time())
         self.score_start_time = int(time.time())
         self.game_started = True
         self.round = 1
         self.difficulty = self.display_manager.screens[ScreenEnum.SETTINGS.value].get_difficulty()
-        self.update_timer_text()
+        if self.time != 0:
+            self.update_timer_text()
 
     def exit_button(self):
         messageScreen = MessageScreen(
@@ -211,7 +213,7 @@ class GameScreen(Screen):
             self.assets,
             self.setting_screen_positions
         )
-        self.buttons["guess_start"] = Button(
+        self.guess_start = Button(
             self.screen,
             text=self.localisation.current_language["start_game"],
             position=(0, 0),
@@ -223,9 +225,9 @@ class GameScreen(Screen):
             callback_function=self.end_turn
         )
         if self.time != 0:
-            self.buttons["guess_start"].set_center_position((384, 700))
+            self.guess_start.set_center_position((384, 700))
         else:
-            self.buttons["guess_start"].set_center_position((256, 700))
+            self.guess_start.set_center_position((256, 700))
         self.start_time = int(time.time())
         self.score_start_time = int(time.time())
         self.game_started = False
@@ -359,13 +361,19 @@ class GameScreen(Screen):
         for score in self.score:
             temp_score = temp_score + self.score[score]
 
-        scores[self.setting_screen_positions["name"]] = temp_score
+        count = 1
+        name = self.setting_screen_positions["name"]
+        while name in scores.keys():
+            name = self.setting_screen_positions["name"] + "-" + str(count)
+            count = count + 1
+
+        scores[name] = temp_score
         with open(str(self.difficulty) + 'high_scores.json', 'w') as f:
             f.write(json.dumps(scores))
 
     def open_score(self):
         if path.exists(str(self.difficulty) + "high_scores.json"):
-            with open('high_scores.json') as f:
+            with open(str(self.difficulty) + 'high_scores.json') as f:
                 scores = json.load(f)
                 scores = collections.OrderedDict(scores)
                 return scores
@@ -416,8 +424,9 @@ class GameScreen(Screen):
         self.screen.blit(self.game_background_image, [0, 0])
 
         if self.game_started:
-            self.update_timer_text()
             self.update_score_text()
+            if self.time != 0:
+                self.update_timer_text()
 
         self.screen.blit(self.assets.arrows, [220 - (32 * (6 - self.amount_pins)), 32 * self.current_row + 132])
 
@@ -435,9 +444,15 @@ class GameScreen(Screen):
             for col in range(self.columns):
                 self.result_array[row][col].draw()
 
+        if not self.game_started:
+            self.screen.blit(self.alpha_background, (0, 0))
+        
+        self.guess_start.draw()
+
     def handle_events(self, events):
         super().handle_events(events)
 
+        self.guess_start.handle_events(events)
         for key in self.buttons.keys():
             self.buttons[key].handle_events(events)
 

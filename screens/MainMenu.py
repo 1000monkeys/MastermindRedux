@@ -1,20 +1,24 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from helpers.DisplayManager import DisplayManager
+    from helpers.Localisation import Localisation
+    from helpers.Assets import Assets
+
 import sys
-from unittest.mock import call
 
 import pygame
-from helpers.Assets import Assets
-from helpers.Localisation import Localisation
-from helpers.ScreenEnum import ScreenEnum
-from helpers.TextDisplay import TextDisplay
-from helpers.Button import Button
+from helpers.Enums.ScreenEnum import ScreenEnum
+from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIELements.Button import Button
 from helpers.Screen import Screen
-from helpers.Button import Button
+from helpers.UIELements.Button import Button
 from screens.GameScreen import GameScreen
 from screens.HighScore import HighScore
-from screens.Settings import Settings
 
 class MainMenu(Screen):
-    def __init__(self,  display_manager, screen, localisation, assets) -> None:
+    def __init__(self,  display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets) -> None:
         super().__init__()
         self.display_manager = display_manager
         self.screen = screen
@@ -88,21 +92,23 @@ class MainMenu(Screen):
             callback_function=self.exit_button
         )
 
-    def exit_button(self):
+    def exit_button(self) -> None:
         sys.exit()
 
-    def setting_button(self):
+    def setting_button(self) -> None:
         self.display_manager.change_screen(ScreenEnum.SETTINGS.value)
 
-    def highscore_button(self):
+    def highscore_button(self) -> None:
         self.display_manager.screens[ScreenEnum.HIGH_SCORE.value] = HighScore(self.display_manager, self.screen, self.localisation, self.assets)
         self.display_manager.change_screen(ScreenEnum.HIGH_SCORE.value)
 
-    def play_button(self):
+    def play_button(self) -> None:
         self.display_manager.screens[ScreenEnum.GAMESCREEN.value] = GameScreen(self.display_manager, self.screen, self.localisation, self.assets, self.display_manager.screens[ScreenEnum.SETTINGS.value].get_settings())
         self.display_manager.change_screen(ScreenEnum.GAMESCREEN.value)
 
-    def draw(self):
+    def draw(self) -> None:
+        super().draw()
+
         self.screen.blit(self.background_image, [0,0])
 
         for key in self.texts.keys():
@@ -111,7 +117,7 @@ class MainMenu(Screen):
         for key in self.buttons.keys():
             self.buttons[key].draw()
         
-    def handle_events(self, events):
+    def handle_events(self, events: pygame.EventList) -> None:
         super().handle_events(events)
 
         for key in self.buttons.keys():

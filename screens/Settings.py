@@ -1,23 +1,30 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from helpers.DisplayManager import DisplayManager
+    from helpers.Localisation import Localisation
+    from helpers.Assets import Assets
+
 from cgitb import text
-from itertools import repeat
 import json
 from os import path
 from turtle import back
 from typing import Text
 
 import pygame
-from helpers.Button import Button
-from helpers.Container import Container
+from helpers.UIELements.Button import Button
+from helpers.UIELements.Container import Container
 from helpers.Screen import Screen
-from helpers.ScreenEnum import ScreenEnum
-from helpers.SettingsEnum import SettingsEnum
+from helpers.Enums.ScreenEnum import ScreenEnum
+from helpers.Enums.SettingsEnum import SettingsEnum
 from helpers.StaticFunctions import StaticFunctions
-from helpers.TextDisplay import TextDisplay
-from helpers.TextInput import TextInput
-from helpers.TextLoop import TextLoop
+from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIELements.TextInput import TextInput
+from helpers.UIELements.TextLoop import TextLoop
 
 class Settings(Screen):
-    def __init__(self, display_manager, screen, localisation, assets, setting_screen_positions) -> None:
+    def __init__(self, display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets, setting_screen_positions: dict) -> None:
         super().__init__()
         self.display_manager = display_manager
         self.screen = screen
@@ -162,22 +169,31 @@ class Settings(Screen):
         self.texts["name"] = TextDisplay(
             screen,
             text="Name:",
-            position=(120, 500),
+            position=(120, 525),
             font_size=48
         )
         self.texts["name_info"] = TextDisplay(
             screen,
-            text="Min 1, Max 10. Type to enter!",
-            position=(120, 550),
+            text=self.localisation.current_language["name_info"],
+            position=(120, 600),
             font_size=32
         )
- 
+        self.texts["name_info_2"] = TextDisplay(
+            screen,
+            text=self.localisation.current_language["name_info_2"],
+            position=(120, 640),
+            font_size=32
+        )
+
         self.inputs = dict()
         self.inputs["name"] = TextInput(
             self.screen,
-            text="KjevoKjevo",
-            position=(240, 500),
+            text="",
+            position=(240, 525),
             text_color=(255, 255, 255),
+            background_color=(0, 0, 0),
+            border_color=(255, 255, 255),
+            border_width=3,
             max=10
         )
 
@@ -323,6 +339,8 @@ class Settings(Screen):
         self.display_manager.__init__(self.screen, self.get_settings(), self.localisation, start_display_id=self.display_id)
 
     def draw(self):
+        super().draw()
+
         self.screen.blit(self.background_image, [0,0])
         
         self.container.draw()

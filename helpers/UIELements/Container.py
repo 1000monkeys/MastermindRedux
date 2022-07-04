@@ -1,13 +1,12 @@
 import sys
-from xml.dom.minicompat import EmptyNodeList
+from typing import Tuple
 import pygame
-from helpers.Button import Button
-from helpers.TextLoop import TextLoop
+from helpers.Screen import Screen
 from helpers.UIElement import UIElement
 
 
 class Container(UIElement):
-    def __init__(self, screen, items: list, background_color, border_color, border_size, padding) -> None:
+    def __init__(self, screen: Screen, items: list, background_color: Tuple, border_color: Tuple, border_size: Tuple, padding: int) -> None:
         self.screen = screen
 
         self.items = list()
@@ -23,7 +22,7 @@ class Container(UIElement):
         self.calculate_size()
 
 
-    def calculate_size(self):
+    def calculate_size(self) -> None:
         if len(self.items) > 0:
             self.max_position = (0, 0)
             self.min_position = (sys.maxsize, sys.maxsize)
@@ -58,20 +57,24 @@ class Container(UIElement):
             raise Exception('Cannot have an empty container!')
         
 
-    def add_item(self, item):
+    def add_item(self, item: UIElement) -> None:
         self.items.append(item)
         self.calculate_size()
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         return self.border_rect
 
-    def draw(self):
+    def draw(self) -> None:
+        super().draw()
+
         self.screen.fill(self.border_color, self.border_rect)
         self.screen.fill(self.background_color, self.rect)
 
         for key in self.items.keys():
             self.items[key].draw()
 
-    def handle_events(self, events):
+    def handle_events(self, events) -> None:
+        super().handle_events(events)
+
         for key in self.items.keys():
             self.items[key].handle_events(events)

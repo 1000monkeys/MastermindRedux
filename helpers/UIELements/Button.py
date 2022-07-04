@@ -1,9 +1,15 @@
+from __future__ import annotations
+from types import FunctionType
+from typing import Tuple
+
+from helpers.Screen import Screen
+            
 import pygame
 
 from helpers.UIElement import UIElement
 
 class Button(UIElement):
-    def __init__(self, screen, text, position, text_color, background_color=None, border_color=None, border_size=0, font_size=36, padding=0, callback_function=None) -> None:
+    def __init__(self, screen: Screen, text: str, position: Tuple, text_color: Tuple, background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0, callback_function: FunctionType=None) -> None:
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.text = text
@@ -57,17 +63,19 @@ class Button(UIElement):
         self.text_rect = self.text_rendered.get_rect()
         self.text_rect.center = self.normal_rect.center
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         return self.rect
 
-    def set_center_position(self, position):
+    def set_center_position(self, position) -> None:
         self.normal_rect.center = position
         self.normal_border_rect.center = position
         self.larger_rect.center = position
         self.larger_border_rect.center = position
         self.text_rect.center = position
 
-    def draw(self):
+    def draw(self) -> None:
+        super().draw()
+
         self.screen.fill(self.text_color, self.border_rect)
         self.screen.fill(self.background_color, self.rect)
         self.screen.blit(self.text_rendered, self.text_rect)
@@ -75,7 +83,9 @@ class Button(UIElement):
     """
     pass events from the screen into this function to handle button specific behaviour
     """
-    def handle_events(self, events):
+    def handle_events(self, events: pygame.EventList):
+        super().handle_events(events)
+
         for event in events:
             if event.type == pygame.MOUSEMOTION:
                 if self.border_rect.collidepoint(event.pos):

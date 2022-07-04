@@ -1,5 +1,5 @@
 class StaticFunctions():
-    def merge_dict(*args):
+    def merge_dict(*args: dict) -> dict:
         result = dict()
         dict_count = 0
         for dictionary in args:

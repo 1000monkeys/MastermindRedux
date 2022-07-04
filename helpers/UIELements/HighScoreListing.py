@@ -1,11 +1,14 @@
-from operator import index
-from turtle import left
-from helpers.Container import Container
+from typing import Tuple
 
-from helpers.TextDisplay import TextDisplay
+import pygame
+from helpers.UIELements.Container import Container
+from helpers.Screen import Screen
 
-class HighScoreListing:
-    def __init__(self, screen, left_text, right_text, position, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0) -> None:
+from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIElement import UIElement
+
+class HighScoreListing(UIElement):
+    def __init__(self, screen: Screen, left_text: str, right_text: str, position: Tuple, text_color: Tuple=(255, 255, 255), background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0) -> None:
         self.screen = screen
         self.left_text = left_text
         self.right_text = right_text
@@ -39,11 +42,13 @@ class HighScoreListing:
             padding=5,
         )
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         return self.container.rect
 
-    def draw(self):
+    def draw(self) -> None:
+        super().draw()
+
         self.container.draw()
 
-    def handle_events(self, events):
-        pass
+    def handle_events(self, events) -> None:
+        super().handle_events(events)

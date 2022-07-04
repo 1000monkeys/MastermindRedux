@@ -1,30 +1,36 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from helpers.DisplayManager import DisplayManager
+    from helpers.Localisation import Localisation
+    from helpers.Assets import Assets
+
 import collections
 import json
-from operator import contains, itemgetter
+from operator import itemgetter
 from os import path
-import sys
 
 import pygame
 from helpers.Assets import Assets
-from helpers.Button import Button
-from helpers.Container import Container
-from helpers.HighScoreListing import HighScoreListing
+from helpers.UIELements.Button import Button
+from helpers.UIELements.HighScoreListing import HighScoreListing
 from helpers.Localisation import Localisation
 from helpers.Screen import Screen
-from helpers.ScreenEnum import ScreenEnum
-from helpers.SettingsEnum import SettingsEnum
-from helpers.StaticFunctions import StaticFunctions
-from helpers.TextDisplay import TextDisplay
+from helpers.Enums.ScreenEnum import ScreenEnum
+from helpers.Enums.SettingsEnum import SettingsEnum
+from helpers.UIELements.TextDisplay import TextDisplay
 
 
 class HighScore(Screen):
-    def __init__(self, display_manager, screen, localisation, assets) -> None:
+    def __init__(self, display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets) -> None:
         super().__init__()
         self.display_manager = display_manager
         self.screen = screen
         self.localisation = localisation
         self.assets = assets
         self.page = 0
+        self.amount_per_page = 6
 
         self.background_image = pygame.transform.scale(
             self.assets.main_background_image,
@@ -97,7 +103,7 @@ class HighScore(Screen):
         )
         self.buttons["next"].set_center_position((850, 600))
 
-        self.difficulty = self.display_manager.screens[ScreenEnum.SETTINGS.value].get_difficulty()
+        self.difficulty = SettingsEnum.Difficulty.value.NORMAL.value
         self.populate_list()
         
         self.buttons["exit"] = Button(
@@ -112,19 +118,19 @@ class HighScore(Screen):
             callback_function=self.exit_button
         )
 
-    def easy(self):
+    def easy(self) -> None:
         self.difficulty = SettingsEnum.Difficulty.value.EASY.value
         self.populate_list()
 
-    def normal(self):
+    def normal(self) -> None:
         self.difficulty = SettingsEnum.Difficulty.value.NORMAL.value
         self.populate_list()
 
-    def difficult(self):
+    def difficult(self) -> None:
         self.difficulty = SettingsEnum.Difficulty.value.HARD.value
         self.populate_list()
 
-    def populate_list(self):
+    def populate_list(self) -> None:
         if path.exists(str(self.difficulty) + "high_scores.json"):
             with open(str(self.difficulty) + 'high_scores.json') as f:
                 self.json_data = json.load(f)
@@ -133,7 +139,7 @@ class HighScore(Screen):
                 index = 0
                 self.listings = dict()
                 for key, value in self.json_data.items():
-                    position = (71, 56 + ((index % 5) * 75))
+                    position = (71, 56 + ((index % self.amount_per_page) * 75))
 
                     self.listings[index] = HighScoreListing(
                         screen=self.screen,
@@ -157,33 +163,35 @@ class HighScore(Screen):
             }
             self.listings["No scores!"].set_center_position((1024/2, 786/2))
 
-    def next_page(self):
+    def next_page(self) -> None:
         self.page = self.page + 1
-        if self.page > len(self.listings) / 5:
+        if self.page > len(self.listings) / self.amount_per_page:
             self.page = self.page - 1
 
-    def previous_page(self):
+    def previous_page(self) -> None:
         self.page = self.page - 1
         if self.page < 0:
             self.page = 0
 
-    def exit_button(self):
+    def exit_button(self) -> None:
         self.display_manager.change_screen(ScreenEnum.MAIN_MENU.value)
 
-    def draw(self):
+    def draw(self) -> None:
+        super().draw()
+
         self.screen.blit(self.background_image, [0,0])
 
-        for index in range(self.page * 5, (self.page + 1) * 5):
+        for index in range(self.page * self.amount_per_page, (self.page + 1) * self.amount_per_page):
             if index < len(self.listings):
                 self.listings[index].draw()
 
         for key in self.buttons.keys():
             self.buttons[key].draw()
 
-    def handle_events(self, events):
+    def handle_events(self, events: pygame.EventList) -> None:
         super().handle_events(events)
 
-        for index in range(self.page * 5, (self.page + 1) * 5):
+        for index in range(self.page * self.amount_per_page, (self.page + 1) * self.amount_per_page):
             if index < len(self.listings):
                 self.listings[index].handle_events(events)
 

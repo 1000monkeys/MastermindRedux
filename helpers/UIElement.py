@@ -1,5 +1,6 @@
 import abc
-import sys
+
+import pygame
 
 
 class UIElement(metaclass=abc.ABCMeta):
@@ -9,7 +10,9 @@ class UIElement(metaclass=abc.ABCMeta):
             hasattr(subclass, 'handle_events')
             and callable(subclass.handle_events) and
             hasattr(subclass, 'draw')
-            and callable(subclass.draw)
+            and callable(subclass.draw) and
+            hasattr(subclass, 'get_rect')
+            and callable(subclass.get_rect)
             or NotImplemented
         )
 
@@ -18,10 +21,14 @@ class UIElement(metaclass=abc.ABCMeta):
         pass
     
     @abc.abstractmethod
-    def handle_events(self, events):
+    def handle_events(self, events) -> None:
         pass
 
     @abc.abstractmethod
-    def get_rect(self):
+    def draw(self) -> None:
+        pass
+
+    @abc.abstractmethod
+    def get_rect(self) -> pygame.Rect:
         pass
 

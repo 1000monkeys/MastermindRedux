@@ -1,8 +1,13 @@
-from helpers.SettingsEnum import SettingsEnum
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from helpers.DisplayManager import DisplayManager
+
+from helpers.Enums.SettingsEnum import SettingsEnum
 
 class Localisation:
-    def __init__(self, display_manager) -> None:
+    def __init__(self, display_manager: DisplayManager) -> None:
         self.display_manager = display_manager
 
         self.text_nl = dict()
@@ -129,25 +134,29 @@ class Localisation:
         ]
 
         self.text_nl["score_list_info"] = {
-            0: "Huidige instellingen hebben GEEN top score lijst",
-            1: "Huidige instellingen hebben de MAKKELIJK top score lijst",
-            2: "Huidige instellingen hebben de NORMAAL top score lijst",
-            3: "Huidige instellingen hebben de MOEILIJK top score lijst"
+            -1: "Huidige instellingen hebben GEEN top score lijst",
+            0: "Huidige instellingen hebben de MAKKELIJK top score lijst",
+            1: "Huidige instellingen hebben de NORMAAL top score lijst",
+            2: "Huidige instellingen hebben de MOEILIJK top score lijst"
         }
         self.text_en["score_list_info"] = {
-            0: "Current settings have NO high score list",
-            1: "Current settings have the MAKKELIJK high score list",
-            2: "Current settings have the NORMAAL high score list",
-            3: "Current settings have the MOEILIJK high score list"
+            -1: "Current settings have NO high score list",
+            0: "Current settings have the MAKKELIJK high score list",
+            1: "Current settings have the NORMAAL high score list",
+            2: "Current settings have the MOEILIJK high score list"
         }
 
         self.text_nl["save_and_exit"] = "Opslaan en terug"
         self.text_en["save_and_exit"] = "Save and go back"
 
-        self.text_nl["game_description"] = "Het spel gaat als volgt: De speler plaatst links 4 verschillende kleuren pionnetjes. Nadat je je gok doorstuurt komt in het rechter gedeelte een aantal zwarte en/of witte pionnetjes. Of geen." + \
+        self.text_nl["game_description"] = "Het spel gaat als volgt: De speler plaatst links een aantal verschillende kleuren pionnetjes. Nadat je je gok doorstuurt komt in het rechter gedeelte een aantal zwarte en/of witte pionnetjes. Of geen." + \
         "Als je geen pionnen krijgt zijn alle kleuren en alle posities fout. Als je een zwarte pion krijgt betekent dat dat er een van de gekleurde pionnen op de juiste positie staat. Als je een witte pion krijgt " + \
-        "is de kleur juist maar de positie onjuist. Let op! De posities van de zwarte en witte pionnen zijn niet gelinkt aan de posities van de gegokte kleuren."
-        self.text_en["game_description"] = "TODO"
+        "is de kleur juist maar de positie onjuist. Let op! De posities van de zwarte en witte pionnen zijn niet gelinkt aan de posities van de gegokte kleuren." + \
+        "Linker klik is vooruit in de kleuren en rechter klik is achteruit."
+        self.text_en["game_description"] = "The game goes as follows: The player places a number colored pins. After you commit your guess you get a couple of black or white pins on the right part. Or none." + \
+        "If you get no pins alle colors and pins are wrong. If you get a black pin that means one of the colored pins is in the right position. If you get a white pin " + \
+        "the color is right but the position is wrong. Attention! The positions on the white and black pins are not linked to the colored pins." + \
+        "Left click is forward through the colors and right click is backwards."
 
         self.text_nl["start_game"] = "Start game!"
         self.text_en["start_game"] = "Start game!"
@@ -186,12 +195,17 @@ class Localisation:
         self.text_en["restart"] = "Restart game!"
 
         self.text_nl["you_won"] = "Je hebt het gekraakt! Op naar de volgende ronde!"
-        self.text_en["you_won"] = "You cracked it! Onto the next round!"
+        self.text_en["you_won"] = "You cracked it! Onto the next round!"\
+
+        self.text_nl["name_info"] = "Min 1, Max 10, Alleen letters."
+        self.text_nl["name_info_2"] = "Backspace om te verwijderen and dan typen om in te voeren!"
+        self.text_en["name_info"] = "Min 1, Max 10, Alpha only."
+        self.text_en["name_info_2"] = "Backspace to remove and then type to enter!"
 
         self.languages = {0: self.text_nl, 1: self.text_en}
         self.current_language_id = 0
         self.current_language = self.languages[self.current_language_id]
 
-    def set_language(self, language_pos):
+    def set_language(self, language_pos: int) -> None:
         self.current_language_id = language_pos
         self.current_language = self.languages[self.current_language_id]

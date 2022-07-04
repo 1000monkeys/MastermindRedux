@@ -1,12 +1,22 @@
+from __future__ import annotations
+from types import FunctionType
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from helpers.DisplayManager import DisplayManager
+    from helpers.Localisation import Localisation
+    from helpers.Assets import Assets
+
 from turtle import screensize
 import pygame
-from helpers.Button import Button
+from helpers.UIELements.Button import Button
 from helpers.Screen import Screen
-from helpers.TextDisplay import TextDisplay
+from helpers.UIELements.TextDisplay import TextDisplay
 
 
 class MessageScreen(Screen):
-    def __init__(self, display_manager, screen, localisation, assets, prompt_text, left_option_text, left_option_callback, right_option_text, right_option_callback) -> None:
+    def __init__(self, display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets, prompt_text: str, left_option_text: str, left_option_callback: FunctionType, right_option_text: str, right_option_callback: FunctionType) -> None:
+        super().__init__()
         self.display_manager = display_manager
         self.screen = screen
         self.localisation = localisation
@@ -65,6 +75,8 @@ class MessageScreen(Screen):
         self.background.fill((0, 0, 0))
 
     def draw(self):
+        super().draw()
+
         self.screen.blit(self.background, (0, 0))
 
         for key in self.texts.keys():

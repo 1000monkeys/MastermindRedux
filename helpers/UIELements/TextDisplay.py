@@ -1,11 +1,12 @@
-from distutils.fancy_getopt import wrap_text
-from turtle import position, width
+from ctypes import Array
+from typing import Tuple
 import pygame
+from helpers.Screen import Screen
 
 from helpers.UIElement import UIElement
 
 class TextDisplay(UIElement):
-    def __init__(self, screen, text, position, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0, width=None) -> None:
+    def __init__(self, screen: Screen, text: str, position: Tuple, text_color: Tuple=(255, 255, 255), background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0, width: int=None) -> None:
         self.screen = screen
         self.text = text
         self.position = position
@@ -67,10 +68,10 @@ class TextDisplay(UIElement):
                     len(self.lines) * self.font.get_linesize()  + (self.padding * 2) + (self.border_size * 2)
                 )
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         return self.rect
 
-    def create_wrapped_text_list(self, text, font, width):
+    def create_wrapped_text_list(self, text: str, font: pygame.font.Font, width: int) -> Array:
         """Wrap text to fit inside a given width when rendered.
         :param text: The text to be wrapped.
         :param font: The font the text will be rendered in.
@@ -104,7 +105,7 @@ class TextDisplay(UIElement):
                 wrapped_lines.append(line)
         return wrapped_lines
 
-    def render_text_lists(self, lines):
+    def render_text_lists(self, lines: Array) -> pygame.Surface:
         rendered = [self.font.render(line, True, self.text_color).convert_alpha() for line in lines]
 
         line_height = self.font.get_linesize()
@@ -118,13 +119,15 @@ class TextDisplay(UIElement):
             surface.blit(line, (0, y))
         return surface
 
-    def set_center_position(self, position):
+    def set_center_position(self, position: Tuple) -> None:
         if self.border_rect is not None:
             self.border_rect.center = position
         self.rect.center = position
         self.text_rect.center = position
 
-    def draw(self):
+    def draw(self) -> None:
+        super().draw()
+
         if self.width is None:
             if self.border_color is not None:
                 self.screen.fill(self.border_color, self.border_rect)
@@ -138,5 +141,5 @@ class TextDisplay(UIElement):
                 self.screen.fill(self.background_color, self.rect)
             self.screen.blit(self.surface, self.text_rect)
 
-    def handle_events(self, events):
-        pass
+    def handle_events(self, events) -> None:
+        super().handle_events(events)

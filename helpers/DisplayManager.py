@@ -1,15 +1,12 @@
-from email.message import Message
 from helpers.Assets import Assets
 from helpers.Localisation import Localisation
-from helpers.ScreenEnum import ScreenEnum
-from screens.GameScreen import GameScreen
+from helpers.Screen import Screen
+from helpers.Enums.ScreenEnum import ScreenEnum
 from screens.MainMenu import MainMenu
-from screens.MessageScreen import MessageScreen
 from screens.Settings import Settings
-from screens.HighScore import HighScore
 
 class DisplayManager:
-    def __init__(self, screen, setting_screen_positions, localisation=None, start_display_id=None) -> None:
+    def __init__(self, screen: Screen, setting_screen_positions: dict, localisation: Localisation=None, start_display_id :int=None) -> None:
         self.screen = screen
         if start_display_id is not None:
             self.screen_id = start_display_id
@@ -34,14 +31,14 @@ class DisplayManager:
             ScreenEnum.GAMESCREEN.value: None
         }
 
-    def set_message_screen(self, message_screen):
+    def set_message_screen(self, message_screen: Screen) -> None:
         self.message_screen = message_screen
 
-    def get_current_screen_id(self):
+    def get_current_screen_id(self) -> None:
         return self.screen_id
             
-    def get_current_screen(self):
+    def get_current_screen(self) -> Screen:
         return self.screens[self.screen_id]
 
-    def change_screen(self, screen_id):
+    def change_screen(self, screen_id) -> None:
         self.screen_id = screen_id

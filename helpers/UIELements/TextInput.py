@@ -1,8 +1,12 @@
+from typing import Tuple
 import pygame
+from helpers.Screen import Screen
+
+from helpers.UIElement import UIElement
 
 
-class TextInput:
-    def __init__(self, screen, text, position, text_color, background_color=None, border_color=None, border_width=None, max=None):
+class TextInput(UIElement):
+    def __init__(self, screen: Screen, text: str, position: Tuple, text_color: str, background_color: Tuple=None, border_color: Tuple=None, border_width: int=None, max: int=None):
         self.screen = screen
         self.text = text
         self.position = position
@@ -26,19 +30,21 @@ class TextInput:
         
         self.background_color = background_color
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         if self.border_color != None and self.border_width != None:
             return self.border_rect
         else:
             return self.rect
 
-    def get_input(self):
+    def get_input(self) -> str:
         return self.text
 
-    def set_input(self, text):
+    def set_input(self, text: str) -> None:
         self.text = text
 
     def draw(self):
+        super().draw()
+
         self.update_size()
 
         if self.border_color != None and self.border_width != None:
@@ -50,7 +56,9 @@ class TextInput:
         text_img = self.font.render(self.text, False, self.text_color)
         self.screen.blit(text_img, (self.rect.x + 10, self.rect.y))
 
-    def handle_events(self, events):
+    def handle_events(self, events) -> None:
+        super().handle_events(events)
+
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
@@ -67,7 +75,7 @@ class TextInput:
                         else:
                             self.text += event.unicode
 
-    def update_size(self):
+    def update_size(self) -> None:
         width, height = self.font.size(self.text)
         if self.border_color != None and self.border_width != None:
             self.border_rect = pygame.Rect(

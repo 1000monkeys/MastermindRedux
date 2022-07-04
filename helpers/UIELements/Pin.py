@@ -1,8 +1,13 @@
+from typing import Tuple
 import pygame
+from helpers.Assets import Assets
+
+from helpers.Screen import Screen
+from helpers.UIElement import UIElement
 
 
-class Pin:
-    def __init__(self, screen, assets, position, max_pin) -> None:
+class Pin(UIElement):
+    def __init__(self, screen: Screen, assets: Assets, position: Tuple, max_pin: int) -> None:
         self.screen = screen
         self.assets = assets
         self.position = position
@@ -15,7 +20,7 @@ class Pin:
         self.rect = pygame.Rect(self.position[0], self.position[1], 24, 24)
         self.border_rect = pygame.Rect(self.position[0] - 1, self.position[1] - 1, 26, 26)
 
-    def next_color(self):
+    def next_color(self) -> None:
         if self.changed:
             if self.color_pos + 1 == self.max_pin:
                 self.color_pos = 0
@@ -26,8 +31,7 @@ class Pin:
             self.color_pos = 0
         self.color = self.assets.color_pins[self.color_pos]
 
-    def previous_color(self):
-        print(self.color_pos)
+    def previous_color(self) -> None:
         if self.changed:
             if self.color_pos - 1 == -1:
                 self.color_pos = self.max_pin - 1
@@ -38,14 +42,21 @@ class Pin:
             self.color_pos = self.max_pin - 1
         self.color = self.assets.color_pins[self.color_pos]
 
-    def draw(self):
+    def get_rect(self) -> pygame.Rect:
+        return self.rect
+
+    def draw(self) -> None:
+        super().draw()
+
         pygame.draw.rect(self.screen, self.assets.black, self.border_rect)
         if self.changed:
             pygame.draw.rect(self.screen, self.color, self.rect)
         else:
             pygame.draw.rect(self.screen, self.assets.gray, self.rect)
 
-    def handle_events(self, events):
+    def handle_events(self, events) -> None:
+        super().handle_events(events)
+        
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.rect.collidepoint(event.pos):

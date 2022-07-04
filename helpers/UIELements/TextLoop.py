@@ -1,10 +1,14 @@
 import sys
+from types import FunctionType
+from typing import List, Tuple
 import pygame
-from helpers.TextDisplay import TextDisplay
+from helpers.Screen import Screen
+from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIElement import UIElement
 
 
-class TextLoop:
-    def __init__(self, screen, texts, position, text_color=(255, 255, 255), background_color=None, border_color=None, border_size=0, font_size=36, padding=0, callback_function=None) -> None:
+class TextLoop(UIElement):
+    def __init__(self, screen: Screen, texts: str, position: Tuple, text_color: Tuple=(255, 255, 255), background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0, callback_function: FunctionType=None) -> None:
         self.screen = screen
         self.texts = texts
         self.position = position
@@ -20,17 +24,17 @@ class TextLoop:
         self.text_displays = list()
         self.create_text_displays()
 
-    def next_option(self):
+    def next_option(self) -> None:
         self.current_option = self.current_option + 1
         if self.current_option >= len(self.texts):
             self.current_option = 0
         self.text_displays = list()
         self.create_text_displays()
 
-    def get_text_displays(self):
+    def get_text_displays(self) -> List:
         return self.text_displays
 
-    def create_text_displays(self):
+    def create_text_displays(self) -> None:
         for i, text in enumerate(self.texts):
             self.text_displays.insert(i, TextDisplay(
                     screen=self.screen,
@@ -45,10 +49,10 @@ class TextLoop:
                 )
             )
 
-    def get_option(self):
+    def get_option(self) -> int:
         return self.current_option
 
-    def set_option(self, option_pos):
+    def set_option(self, option_pos: int) -> None:
         if option_pos < 0:
             return Exception("Option position lower than 0!")
 
@@ -59,7 +63,7 @@ class TextLoop:
         self.text_displays = list()
         self.create_text_displays()
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         self.max_position = (0, 0)
         self.min_position = (sys.maxsize, sys.maxsize)
         for text_display in self.text_displays:
@@ -83,6 +87,8 @@ class TextLoop:
         return self.rect
 
     def handle_events(self, events):
+        super().handle_events(events)
+
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.callback_function is not None:
@@ -93,6 +99,6 @@ class TextLoop:
                     self.next_option()
 
     def draw(self):
-        self.text_displays[self.current_option].draw()
+        super().draw()
 
-            
+        self.text_displays[self.current_option].draw()

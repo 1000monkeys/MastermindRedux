@@ -10,10 +10,10 @@ import sys
 
 import pygame
 from helpers.Enums.ScreenEnum import ScreenEnum
-from helpers.UIELements.TextDisplay import TextDisplay
-from helpers.UIELements.Button import Button
+from helpers.UIElements.TextDisplay import TextDisplay
+from helpers.UIElements.Button import Button
 from helpers.Screen import Screen
-from helpers.UIELements.Button import Button
+from helpers.UIElements.Button import Button
 from screens.GameScreen import GameScreen
 from screens.HighScore import HighScore
 

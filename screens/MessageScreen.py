@@ -9,9 +9,9 @@ if TYPE_CHECKING:
 
 from turtle import screensize
 import pygame
-from helpers.UIELements.Button import Button
+from helpers.UIElements.Button import Button
 from helpers.Screen import Screen
-from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIElements.TextDisplay import TextDisplay
 
 
 class MessageScreen(Screen):

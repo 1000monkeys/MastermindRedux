@@ -2,32 +2,52 @@ import collections
 import json
 from operator import itemgetter
 from os import path
+import os
 from turtle import update
 import pygame
 
 from helpers.DisplayManager import DisplayManager
+from helpers.Enums.ScreenEnum import ScreenEnum
 
 class Game():
+    """The main game class containing the startup sequence for the game
+    Also contains the main game loop which runs with a while True
+    """
     def __init__(self) -> None:
-        if path.exists("settings.json"):
-            with open('settings.json') as f:
+        if path.exists("data/settings.json"):
+            with open('data/settings.json') as f:
                 setting_screen_positions = json.load(f)
         else:
             setting_screen_positions = {
                 "language_pos": 0,
                 "game_rounds_pos": 0,
                 "time_guess_pos": 0,
-                "amount_pins_pos": 0
+                "amount_pins_pos": 0,
+                "name": "user"
             }
 
         pygame.init()
 
         self.screen = pygame.display.set_mode((1024, 786))
         pygame.display.set_caption("Mastermind")
-        self.display_manager = DisplayManager(self.screen, setting_screen_positions)
 
+        self.display_manager = DisplayManager(self.screen, setting_screen_positions)
+        if not path.exists("data"):
+            os.mkdir("data")
+        if not path.exists("data/settings.json"):
+            with open('data/settings.json', 'w') as f:
+                f.write(json.dumps(setting_screen_positions))
+        if not path.exists("data/0highscore.json"):
+            with open('data/0high_scores.json', 'w') as f:
+                f.write(json.dumps(dict()))
+        if not path.exists("data/1highscore.json"):
+            with open('data/1high_scores.json', 'w') as f:
+                f.write(json.dumps(dict()))
+        if not path.exists("data/2highscore.json"):
+            with open('data/2high_scores.json', 'w') as f:
+                f.write(json.dumps(dict()))
+    
     def run_loop(self):
-        self.update_score()
         while True:
             pygame.time.Clock().tick(30)
             current_display = self.display_manager.get_current_screen()
@@ -41,21 +61,7 @@ class Game():
                 self.display_manager.message_screen.handle_events(events)
             pygame.display.flip()
 
-    def update_score(self):
-        scores = self.open_score()
-
-        scores["1vvzzant"] = 99999
-        with open(str(0) + 'high_scores.json', 'w') as f:
-            f.write(json.dumps(scores))
-
-    def open_score(self):
-        if path.exists(str(0) + "high_scores.json"):
-            with open(str(0) + 'high_scores.json') as f:
-                scores = json.load(f)
-                scores = collections.OrderedDict(scores)
-                return scores
-        else:
-            return collections.OrderedDict()
-
 game = Game()
 game.run_loop()
+
+# pyinstaller-script.py --noconsole --onefile .\mastermind.py --hidden-import pygame --add-binary "assets/arrows.jpg;assets" --add-binary "assets/enigma.jpg;assets" --add-binary "assets/board.jpg;assets"

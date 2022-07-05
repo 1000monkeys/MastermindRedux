@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Tuple
 import pygame
 from helpers.Screen import Screen
@@ -42,6 +44,17 @@ class TextInput(UIElement):
     def set_input(self, text: str) -> None:
         self.text = text
 
+    def update_size(self) -> None:
+        width, height = self.font.size(self.text)
+        if self.border_color != None and self.border_width != None:
+            self.border_rect = pygame.Rect(
+                self.position[0] - self.border_width,
+                self.position[1] - self.border_width,
+                width + 20 + self.border_width * 2,
+                height + self.border_width * 2
+            )
+        self.rect = pygame.Rect(self.position[0], self.position[1], width + 20, height)
+
     def draw(self):
         super().draw()
 
@@ -56,7 +69,7 @@ class TextInput(UIElement):
         text_img = self.font.render(self.text, False, self.text_color)
         self.screen.blit(text_img, (self.rect.x + 10, self.rect.y))
 
-    def handle_events(self, events) -> None:
+    def handle_events(self, events: pygame.EventList) -> None:
         super().handle_events(events)
 
         for event in events:
@@ -74,14 +87,3 @@ class TextInput(UIElement):
                             self.text = str(event.unicode)
                         else:
                             self.text += event.unicode
-
-    def update_size(self) -> None:
-        width, height = self.font.size(self.text)
-        if self.border_color != None and self.border_width != None:
-            self.border_rect = pygame.Rect(
-                self.position[0] - self.border_width,
-                self.position[1] - self.border_width,
-                width + 20 + self.border_width * 2,
-                height + self.border_width * 2
-            )
-        self.rect = pygame.Rect(self.position[0], self.position[1], width + 20, height)

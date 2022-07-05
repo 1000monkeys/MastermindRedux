@@ -13,15 +13,15 @@ from turtle import back
 from typing import Text
 
 import pygame
-from helpers.UIELements.Button import Button
-from helpers.UIELements.Container import Container
+from helpers.UIElements.Button import Button
+from helpers.UIElements.Container import Container
 from helpers.Screen import Screen
 from helpers.Enums.ScreenEnum import ScreenEnum
 from helpers.Enums.SettingsEnum import SettingsEnum
 from helpers.StaticFunctions import StaticFunctions
-from helpers.UIELements.TextDisplay import TextDisplay
-from helpers.UIELements.TextInput import TextInput
-from helpers.UIELements.TextLoop import TextLoop
+from helpers.UIElements.TextDisplay import TextDisplay
+from helpers.UIElements.TextInput import TextInput
+from helpers.UIElements.TextLoop import TextLoop
 
 class Settings(Screen):
     def __init__(self, display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets, setting_screen_positions: dict) -> None:
@@ -318,7 +318,7 @@ class Settings(Screen):
         self.update_difficulty()
 
     def save_settings(self):
-        with open('settings.json', 'w') as f:
+        with open('data/settings.json', 'w') as f:
             f.write(json.dumps(self.get_settings()))
 
     def back(self):

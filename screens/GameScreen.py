@@ -13,18 +13,31 @@ from random import randrange
 import time
 from tkinter.font import NORMAL
 import pygame
-from helpers.UIELements.Button import Button
+from helpers.UIElements.Button import Button
 from helpers.Enums.DifficultyEnum import DifficultyEnum
-from helpers.UIELements.Pin import Pin
-from helpers.UIELements.ResultPin import ResultPin
+from helpers.UIElements.Pin import Pin
+from helpers.UIElements.ResultPin import ResultPin
 
 from helpers.Screen import Screen
 from helpers.Enums.ScreenEnum import ScreenEnum
-from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIElements.TextDisplay import TextDisplay
 from screens.MessageScreen import MessageScreen
 
 class GameScreen(Screen):
     def __init__(self, display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets, setting_screen_positions: dict) -> None:
+        """_summary_
+
+        :param display_manager: _description_
+        :type display_manager: DisplayManager
+        :param screen: _description_
+        :type screen: Screen
+        :param localisation: _description_
+        :type localisation: Localisation
+        :param assets: _description_
+        :type assets: Assets
+        :param setting_screen_positions: _description_
+        :type setting_screen_positions: dict
+        """
         super().__init__()
         self.display_manager = display_manager
         self.screen = screen
@@ -166,6 +179,8 @@ class GameScreen(Screen):
         self.amount_rounds=1
 
     def create_pins(self) -> None:
+        """_summary_
+        """
         self.pin_array = []
         for j in range(self.rows):
             column = []
@@ -376,12 +391,12 @@ class GameScreen(Screen):
             count = count + 1
 
         scores[name] = temp_score
-        with open(str(self.difficulty) + 'high_scores.json', 'w') as f:
+        with open("data/" + str(self.difficulty) + 'high_scores.json', 'w') as f:
             f.write(json.dumps(scores))
 
     def open_score(self) -> None:
-        if path.exists(str(self.difficulty) + "high_scores.json"):
-            with open(str(self.difficulty) + 'high_scores.json') as f:
+        if path.exists("data/" + str(self.difficulty) + "high_scores.json"):
+            with open("data/" + str(self.difficulty) + 'high_scores.json') as f:
                 scores = json.load(f)
                 scores = collections.OrderedDict(scores)
                 return scores

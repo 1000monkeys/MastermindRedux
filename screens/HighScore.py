@@ -13,13 +13,13 @@ from os import path
 
 import pygame
 from helpers.Assets import Assets
-from helpers.UIELements.Button import Button
-from helpers.UIELements.HighScoreListing import HighScoreListing
+from helpers.UIElements.Button import Button
+from helpers.UIElements.HighScoreListing import HighScoreListing
 from helpers.Localisation import Localisation
 from helpers.Screen import Screen
 from helpers.Enums.ScreenEnum import ScreenEnum
 from helpers.Enums.SettingsEnum import SettingsEnum
-from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIElements.TextDisplay import TextDisplay
 
 
 class HighScore(Screen):
@@ -36,6 +36,20 @@ class HighScore(Screen):
             self.assets.main_background_image,
             (1024, 786)
         )
+
+        self.texts = dict()
+        self.texts["header"] = TextDisplay(
+            screen,
+            text="Normal difficulty",
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            border_color=(255, 255, 255),
+            font_size=36,
+            border_size=5,
+            padding=5
+        )
+        self.texts["header"].set_center_position((512, 35))
 
         self.buttons = dict()
         self.buttons["previous"] = Button(
@@ -119,27 +133,66 @@ class HighScore(Screen):
         )
 
     def easy(self) -> None:
+        self.page = 0
         self.difficulty = SettingsEnum.Difficulty.value.EASY.value
         self.populate_list()
+        self.texts["header"] = TextDisplay(
+            self.screen,
+            text="Easy difficulty",
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            border_color=(255, 255, 255),
+            font_size=36,
+            border_size=5,
+            padding=5
+        )
+        self.texts["header"].set_center_position((512, 35))
 
     def normal(self) -> None:
+        self.page = 0
         self.difficulty = SettingsEnum.Difficulty.value.NORMAL.value
         self.populate_list()
+        self.texts["header"] = TextDisplay(
+            self.screen,
+            text="Normal difficulty",
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            border_color=(255, 255, 255),
+            font_size=36,
+            border_size=5,
+            padding=5
+        )
+        self.texts["header"].set_center_position((512, 35))
 
     def difficult(self) -> None:
+        self.page = 0
         self.difficulty = SettingsEnum.Difficulty.value.HARD.value
         self.populate_list()
+        self.texts["header"] = TextDisplay(
+            self.screen,
+            text="Difficult difficulty",
+            position=(0, 0),
+            text_color=(255, 255, 255),
+            background_color=(55, 42, 34),
+            border_color=(255, 255, 255),
+            font_size=36,
+            border_size=5,
+            padding=5
+        )
+        self.texts["header"].set_center_position((512, 35))
 
     def populate_list(self) -> None:
-        if path.exists(str(self.difficulty) + "high_scores.json"):
-            with open(str(self.difficulty) + 'high_scores.json') as f:
+        if path.exists("data/" + str(self.difficulty) + "high_scores.json"):
+            with open("data/" + str(self.difficulty) + 'high_scores.json') as f:
                 self.json_data = json.load(f)
                 self.json_data = collections.OrderedDict(sorted(self.json_data.items(), key=itemgetter(1), reverse=True))
 
                 index = 0
                 self.listings = dict()
                 for key, value in self.json_data.items():
-                    position = (71, 56 + ((index % self.amount_per_page) * 75))
+                    position = (71, 81 + ((index % self.amount_per_page) * 75))
 
                     self.listings[index] = HighScoreListing(
                         screen=self.screen,
@@ -188,6 +241,9 @@ class HighScore(Screen):
         for key in self.buttons.keys():
             self.buttons[key].draw()
 
+        for key in self.texts.keys():
+            self.texts[key].draw()
+
     def handle_events(self, events: pygame.EventList) -> None:
         super().handle_events(events)
 
@@ -197,3 +253,8 @@ class HighScore(Screen):
 
         for key in self.buttons.keys():
             self.buttons[key].handle_events(events)
+
+        for key in self.texts.keys():
+            self.texts[key].handle_events(events)
+
+                

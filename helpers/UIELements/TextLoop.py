@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import sys
 from types import FunctionType
 from typing import List, Tuple
 import pygame
 from helpers.Screen import Screen
-from helpers.UIELements.TextDisplay import TextDisplay
+from helpers.UIElements.TextDisplay import TextDisplay
 from helpers.UIElement import UIElement
 
 
@@ -86,7 +88,7 @@ class TextLoop(UIElement):
 
         return self.rect
 
-    def handle_events(self, events):
+    def handle_events(self, events: pygame.EventList):
         super().handle_events(events)
 
         for event in events:

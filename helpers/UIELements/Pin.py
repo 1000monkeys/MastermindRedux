@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Tuple
 import pygame
 from helpers.Assets import Assets
@@ -8,6 +10,17 @@ from helpers.UIElement import UIElement
 
 class Pin(UIElement):
     def __init__(self, screen: Screen, assets: Assets, position: Tuple, max_pin: int) -> None:
+        """_summary_
+
+        :param screen: Screen to draw the pin to
+        :type screen: Screen
+        :param assets: Assets file to pull assets from
+        :type assets: Assets
+        :param position: position to draw the pin to(top left corner)
+        :type position: Tuple
+        :param max_pin: maximum amount of pins in the game (6/7/8)
+        :type max_pin: int
+        """
         self.screen = screen
         self.assets = assets
         self.position = position
@@ -21,6 +34,8 @@ class Pin(UIElement):
         self.border_rect = pygame.Rect(self.position[0] - 1, self.position[1] - 1, 26, 26)
 
     def next_color(self) -> None:
+        """Changes to the next color
+        """
         if self.changed:
             if self.color_pos + 1 == self.max_pin:
                 self.color_pos = 0
@@ -32,6 +47,8 @@ class Pin(UIElement):
         self.color = self.assets.color_pins[self.color_pos]
 
     def previous_color(self) -> None:
+        """Changes to the previous color
+        """
         if self.changed:
             if self.color_pos - 1 == -1:
                 self.color_pos = self.max_pin - 1
@@ -43,9 +60,16 @@ class Pin(UIElement):
         self.color = self.assets.color_pins[self.color_pos]
 
     def get_rect(self) -> pygame.Rect:
+        """Returns the rect which contains the position and size of the button. The background rect.
+
+        :return: position dictionary with 4 values, first 2 being X/Y and next 2 being width/height
+        :rtype: pygame.Rect
+        """
         return self.rect
 
     def draw(self) -> None:
+        """Draw method called from the screen
+        """
         super().draw()
 
         pygame.draw.rect(self.screen, self.assets.black, self.border_rect)
@@ -54,7 +78,12 @@ class Pin(UIElement):
         else:
             pygame.draw.rect(self.screen, self.assets.gray, self.rect)
 
-    def handle_events(self, events) -> None:
+    def handle_events(self, events: pygame.EventList) -> None:
+        """Handles events passed to this container in the screen also passes the events to all the items inside the container to check in their own handle events function and handle accordingly
+
+        :param events: Events to check
+        :type events: pygame.EventList
+        """
         super().handle_events(events)
         
         for event in events:

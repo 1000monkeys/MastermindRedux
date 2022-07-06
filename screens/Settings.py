@@ -318,8 +318,9 @@ class Settings(Screen):
         self.update_difficulty()
 
     def save_settings(self):
-        with open('data/settings.json', 'w') as f:
-            f.write(json.dumps(self.get_settings()))
+        data = StaticFunctions.decrypt()
+        data["settings"] = self.get_settings()
+        StaticFunctions.encrypt(data)
 
     def back(self):
         self.save_settings()

@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+from helpers.StaticFunctions import StaticFunctions
+
 if TYPE_CHECKING:
     from helpers.DisplayManager import DisplayManager
     from helpers.Localisation import Localisation
@@ -378,7 +380,7 @@ class GameScreen(Screen):
             self.start_time = int(time.time())
 
     def update_score(self) -> None:
-        scores = self.open_score()
+        data = StaticFunctions.decrypt()
 
         temp_score = 0
         for score in self.score:
@@ -386,22 +388,16 @@ class GameScreen(Screen):
 
         count = 1
         name = self.setting_screen_positions["name"]
-        while name in scores.keys():
+        while name in data[str(self.difficulty)]:
             name = self.setting_screen_positions["name"] + "-" + str(count)
             count = count + 1
 
-        scores[name] = temp_score
-        with open("data/" + str(self.difficulty) + 'high_scores.json', 'w') as f:
-            f.write(json.dumps(scores))
+        data[str(self.difficulty)][name] = temp_score
+        StaticFunctions.encrypt(data)
 
     def open_score(self) -> None:
-        if path.exists("data/" + str(self.difficulty) + "high_scores.json"):
-            with open("data/" + str(self.difficulty) + 'high_scores.json') as f:
-                scores = json.load(f)
-                scores = collections.OrderedDict(scores)
-                return scores
-        else:
-            return collections.OrderedDict()
+        data = StaticFunctions.decrypt()
+        return data[str(self.difficulty)]
 
     def update_timer_text(self) -> None:
         self.current_time = int(time.time())

@@ -1,4 +1,5 @@
 import os
+from platform import release
 import sys
 import pygame
 
@@ -6,8 +7,13 @@ class Assets:
     """This class contains all the assets used in the gamescreen and the background used in other screens.
     """
     def __init__(self) -> None:
-        self.main_background_image = pygame.image.load(self.resource_path("assets/enigma.jpg"))
-        self.game_background_image = pygame.image.load(self.resource_path("assets/board.jpg"))
+        release = False
+        if release:
+            self.main_background_image = pygame.image.load(self.resource_path("assets/enigma.jpg"))
+            self.game_background_image = pygame.image.load(self.resource_path("assets/board.jpg"))
+        else:
+            self.main_background_image = pygame.image.load("assets/enigma.jpg")
+            self.game_background_image = pygame.image.load("assets/board.jpg")
 
         self.color_pins = [
             "#ffe119", #yellow
@@ -19,8 +25,10 @@ class Assets:
             "#42d4f4", #cyan
             "#f032e6" #magenta
         ]
-
-        self.arrows = pygame.image.load(self.resource_path("assets/arrows.jpg"))
+        if release:
+            self.arrows = pygame.image.load(self.resource_path("assets/arrows.jpg"))
+        else:
+            self.arrows = pygame.image.load("assets/arrows.jpg")
         self.arrows = pygame.transform.scale(self.arrows, (64, 64))
 
         self.black = "#000000"

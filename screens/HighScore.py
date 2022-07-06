@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+from helpers.StaticFunctions import StaticFunctions
+
 if TYPE_CHECKING:
     from helpers.DisplayManager import DisplayManager
     from helpers.Localisation import Localisation
@@ -184,20 +186,19 @@ class HighScore(Screen):
         self.texts["header"].set_center_position((512, 35))
 
     def populate_list(self) -> None:
-        if path.exists("data/" + str(self.difficulty) + "high_scores.json"):
-            with open("data/" + str(self.difficulty) + 'high_scores.json') as f:
-                self.json_data = json.load(f)
-                self.json_data = collections.OrderedDict(sorted(self.json_data.items(), key=itemgetter(1), reverse=True))
+        data = StaticFunctions.decrypt()
+        if len(data[str(self.difficulty)]) > 0:
+                scores = data[str(self.difficulty)]
 
                 index = 0
                 self.listings = dict()
-                for key, value in self.json_data.items():
+                for name, score in scores.items():
                     position = (71, 81 + ((index % self.amount_per_page) * 75))
 
                     self.listings[index] = HighScoreListing(
                         screen=self.screen,
-                        left_text=str(index + 1) + ": " + str(key),
-                        right_text=str(value),
+                        left_text=str(index + 1) + ": " + str(name),
+                        right_text=str(score),
                         text_color=(255, 255, 255),
                         background_color=(0, 0, 0),
                         border_color=(255, 255, 255),
@@ -206,15 +207,18 @@ class HighScore(Screen):
                     )
                     index = index + 1
         else:
-            self.listings = {
-                "No scores!": TextDisplay(
-                    screen=self.screen,
-                    text=self.localisation.current_language["no_scores"],
-                    position=(0, 0),
-                    text_color=(255, 255, 255),
-                )
-            }
-            self.listings["No scores!"].set_center_position((1024/2, 786/2))
+            self.no_listings = TextDisplay(
+                screen=self.screen,
+                text=self.localisation.current_language["no_scores"],
+                position=(0, 0),
+                text_color=(255, 255, 255),
+                background_color=(55, 42, 34),
+                border_color=(255, 255, 255),
+                border_size=5,
+                padding=4
+            )
+            self.no_listings.set_center_position((1024/2, 786/2))
+            self.listings = dict()
 
     def next_page(self) -> None:
         self.page = self.page + 1
@@ -235,9 +239,11 @@ class HighScore(Screen):
         self.screen.blit(self.background_image, [0,0])
 
         for index in range(self.page * self.amount_per_page, (self.page + 1) * self.amount_per_page):
-            if index < len(self.listings):
+            if index < len(self.listings) and len(self.listings) > 0:
                 self.listings[index].draw()
-
+            elif len(self.listings) < 1:
+                self.no_listings.draw()
+        
         for key in self.buttons.keys():
             self.buttons[key].draw()
 
@@ -248,8 +254,10 @@ class HighScore(Screen):
         super().handle_events(events)
 
         for index in range(self.page * self.amount_per_page, (self.page + 1) * self.amount_per_page):
-            if index < len(self.listings):
+            if index < len(self.listings) and len(self.listings) > 0:
                 self.listings[index].handle_events(events)
+            elif len(self.listings) < 1:
+                self.no_listings.handle_events(events)
 
         for key in self.buttons.keys():
             self.buttons[key].handle_events(events)

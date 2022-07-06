@@ -8,44 +8,36 @@ import pygame
 
 from helpers.DisplayManager import DisplayManager
 from helpers.Enums.ScreenEnum import ScreenEnum
+from helpers.StaticFunctions import StaticFunctions
 
 class Game():
     """The main game class containing the startup sequence for the game
     Also contains the main game loop which runs with a while True
     """
     def __init__(self) -> None:
-        if path.exists("data/settings.json"):
-            with open('data/settings.json') as f:
-                setting_screen_positions = json.load(f)
+        if path.exists("data.txt"):
+            data = StaticFunctions.decrypt()
         else:
-            setting_screen_positions = {
-                "language_pos": 0,
-                "game_rounds_pos": 0,
-                "time_guess_pos": 0,
-                "amount_pins_pos": 0,
-                "name": "user"
+            data = {
+                "settings": {
+                    "language_pos": 0,
+                    "game_rounds_pos": 0,
+                    "time_guess_pos": 0,
+                    "amount_pins_pos": 0,
+                    "name": "user"
+                },
+                "0": {},
+                "1": {},
+                "2": {}
             }
+            StaticFunctions.encrypt(data)
 
         pygame.init()
 
         self.screen = pygame.display.set_mode((1024, 786))
         pygame.display.set_caption("Mastermind")
 
-        self.display_manager = DisplayManager(self.screen, setting_screen_positions)
-        if not path.exists("data"):
-            os.mkdir("data")
-        if not path.exists("data/settings.json"):
-            with open('data/settings.json', 'w') as f:
-                f.write(json.dumps(setting_screen_positions))
-        if not path.exists("data/0highscore.json"):
-            with open('data/0high_scores.json', 'w') as f:
-                f.write(json.dumps(dict()))
-        if not path.exists("data/1highscore.json"):
-            with open('data/1high_scores.json', 'w') as f:
-                f.write(json.dumps(dict()))
-        if not path.exists("data/2highscore.json"):
-            with open('data/2high_scores.json', 'w') as f:
-                f.write(json.dumps(dict()))
+        self.display_manager = DisplayManager(self.screen, data["settings"])
     
     def run_loop(self):
         while True:

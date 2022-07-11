@@ -7,8 +7,10 @@ class Assets:
     """This class contains all the assets used in the gamescreen and the background used in other screens.
     """
     def __init__(self) -> None:
-        release = False
-        if release:
+        """Sets up the assets
+        """
+        self.release = True
+        if self.release:
             self.main_background_image = pygame.image.load(self.resource_path("assets/enigma.jpg"))
             self.game_background_image = pygame.image.load(self.resource_path("assets/board.jpg"))
         else:
@@ -25,7 +27,7 @@ class Assets:
             "#42d4f4", #cyan
             "#f032e6" #magenta
         ]
-        if release:
+        if self.release:
             self.arrows = pygame.image.load(self.resource_path("assets/arrows.jpg"))
         else:
             self.arrows = pygame.image.load("assets/arrows.jpg")
@@ -35,7 +37,16 @@ class Assets:
         self.white = "#FFFFFF"
         self.gray = "#808080"
 
-    def resource_path(self, relative_path):
+        self.brown = (55, 42, 34)
+
+    def resource_path(self, relative_path: str):
+        """Used for release binary to get the included assets/images from the exe
+
+        :param relative_path: The path of the item you want
+        :type relative_path: str
+        :return: The path
+        :rtype: Path
+        """
         try:
             base_path = sys._MEIPASS
         except Exception:

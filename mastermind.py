@@ -49,11 +49,12 @@ class Game():
                 current_display.draw()
             else:
                 current_display.draw()
-                self.display_manager.message_screen.draw()
                 self.display_manager.message_screen.handle_events(events)
+                self.display_manager.message_screen.draw()
             pygame.display.flip()
 
 game = Game()
 game.run_loop()
 
 # pyinstaller-script.py --noconsole --onefile .\mastermind.py --hidden-import pygame --add-binary "assets/arrows.jpg;assets" --add-binary "assets/enigma.jpg;assets" --add-binary "assets/board.jpg;assets"
+# make.bat html

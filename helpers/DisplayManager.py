@@ -7,6 +7,17 @@ from screens.Settings import Settings
 
 class DisplayManager:
     def __init__(self, screen: Screen, setting_screen_positions: dict, localisation: Localisation=None, start_display_id :int=None) -> None:
+        """ This display manager class contains refernces to all screens and methods to switch between them
+
+        :param screen: Screen to draw to
+        :type screen: Screen
+        :param setting_screen_positions: Settings dictionary containing all the settings
+        :type setting_screen_positions: dict
+        :param localisation: Localistation file containing all strings used in the program, defaults to None
+        :type localisation: Localisation, optional
+        :param start_display_id: The display id to initialize the class with, defaults to None
+        :type start_display_id: int, optional
+        """
         self.screen = screen
         if start_display_id is not None:
             self.screen_id = start_display_id
@@ -14,7 +25,7 @@ class DisplayManager:
             self.screen_id = 0
 
         if localisation == None:
-            self.localisation = Localisation(self)
+            self.localisation = Localisation()
             self.localisation.set_language(setting_screen_positions["language_pos"])
         else:
             self.localisation = localisation

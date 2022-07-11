@@ -15,7 +15,7 @@ from helpers.UIElements.TextDisplay import TextDisplay
 
 
 class MessageScreen(Screen):
-    def __init__(self, display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets, prompt_text: str, left_option_text: str, left_option_callback: FunctionType, right_option_text: str, right_option_callback: FunctionType) -> None:
+    def __init__(self, display_manager: DisplayManager, screen: Screen, localisation: Localisation, assets: Assets, prompt_text: str, left_option_text: str=None, left_option_callback: FunctionType=None, right_option_text: str=None, right_option_callback: FunctionType=None) -> None:
         super().__init__()
         self.display_manager = display_manager
         self.screen = screen
@@ -33,48 +33,61 @@ class MessageScreen(Screen):
         self.texts = dict()
         self.texts["prompt_text"] = TextDisplay(
             screen=screen,
+            assets=self.assets,
             text=self.prompt_text,
             position=(0, 0),
-            text_color=(255, 255, 255),
-            background_color=(55, 42, 34),
-            border_color=(255, 255, 255),
+            text_color=self.assets.white,
+            background_color=self.assets.brown,
+            border_color=self.assets.white,
             border_size=5,
             padding=25
         )
         self.texts["prompt_text"].set_center_position((1024/2, 786/2 - 200))
 
         self.buttons = dict()
-        self.buttons["left_option"] = Button(
-            screen,
-            text=self.left_option_text,
-            position=(256, 700),
-            text_color=(255, 255, 255),
-            background_color=(55, 42, 34),
-            font_size=36,
-            border_size=5,
-            padding=5,
-            callback_function=self.left_option_callback
-        )
-        self.buttons["left_option"].set_center_position((256, 700))
+        if self.left_option_text is not None and self.left_option_callback is not None:
+            self.buttons["left_option"] = Button(
+                screen,
+                assets=self.assets,
+                text=self.left_option_text,
+                position=(256, 700),
+                text_color=self.assets.white,
+                background_color=self.assets.brown,
+                font_size=36,
+                border_size=5,
+                padding=5,
+                callback_function=self.left_option_callback
+            )
+            self.buttons["left_option"].set_center_position((256, 700))
 
-        self.buttons["right_option"] = Button(
-            screen,
-            text=self.right_option_text,
-            position=(768, 700),
-            text_color=(255, 255, 255),
-            background_color=(55, 42, 34),
-            font_size=36,
-            border_size=5,
-            padding=5,
-            callback_function=self.right_option_callback
-        )
-        self.buttons["right_option"].set_center_position((768, 700))
+        if self.right_option_text is not None and self.right_option_callback is not None:
+            self.buttons["right_option"] = Button(
+                screen,
+                assets=self.assets,
+                text=self.right_option_text,
+                position=(768, 700),
+                text_color=self.assets.white,
+                background_color=self.assets.brown,
+                font_size=36,
+                border_size=5,
+                padding=5,
+                callback_function=self.right_option_callback
+            )
+            self.buttons["right_option"].set_center_position((768, 700))
+
+        if self.left_option_text is None and \
+                self.left_option_callback is None and \
+                self.right_option_text is not None and \
+                self.right_option_callback is not None:
+            self.buttons["right_option"].set_center_position((512, 700))
 
         self.background = pygame.Surface((1024, 786))
         self.background.set_alpha(195)
-        self.background.fill((0, 0, 0))
+        self.background.fill(self.assets.black)
 
     def draw(self):
+        """Draw method which draws all ui elements
+        """
         super().draw()
 
         self.screen.blit(self.background, (0, 0))
@@ -86,6 +99,11 @@ class MessageScreen(Screen):
             self.buttons[key].draw()
 
     def handle_events(self, events):
+        """Handles events passed here from the screen
+
+        :param events: Events to check
+        :type events: pygame.EventList
+        """
         super().handle_events(events)
 
         for key in self.buttons.keys():

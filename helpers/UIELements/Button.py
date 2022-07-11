@@ -1,6 +1,7 @@
 from __future__ import annotations
 from types import FunctionType
 from typing import Tuple
+from helpers.Assets import Assets
 
 from helpers.Screen import Screen
             
@@ -9,7 +10,7 @@ import pygame
 from helpers.UIElement import UIElement
 
 class Button(UIElement):
-    def __init__(self, screen: Screen, text: str, position: Tuple, text_color: Tuple, background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0, callback_function: FunctionType=None) -> None:
+    def __init__(self, screen: Screen, assets: Assets, text: str, position: Tuple, text_color: Tuple, background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0, callback_function: FunctionType=None) -> None:
         """The initializer of the button which sets it up with the data.
 
         :param screen: Screen to draw to in the draw method
@@ -34,12 +35,13 @@ class Button(UIElement):
         :type callback_function: FunctionType, optional
         """
         self.screen = screen
+        self.assets = assets
         self.screen_rect = screen.get_rect()
         self.text = text
         self.position = position
         self.text_color = text_color
         self.background_color = background_color
-        self.border_Color = border_color
+        self.border_color = border_color
         self.border_size = border_size
         self.font_size = font_size
         self.padding = padding
@@ -113,7 +115,8 @@ class Button(UIElement):
         super().draw()
 
         self.screen.fill(self.text_color, self.border_rect)
-        self.screen.fill(self.background_color, self.rect)
+        if self.background_color != None:
+            self.screen.fill(self.background_color, self.rect)
         self.screen.blit(self.text_rendered, self.text_rect)
 
     def handle_events(self, events: pygame.EventList):

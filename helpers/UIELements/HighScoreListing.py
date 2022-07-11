@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Tuple
 
 import pygame
+from helpers.Assets import Assets
 from helpers.UIElements.Container import Container
 from helpers.Screen import Screen
 
@@ -10,7 +11,7 @@ from helpers.UIElements.TextDisplay import TextDisplay
 from helpers.UIElement import UIElement
 
 class HighScoreListing(UIElement):
-    def __init__(self, screen: Screen, left_text: str, right_text: str, position: Tuple, text_color: Tuple=(255, 255, 255), background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0) -> None:
+    def __init__(self, screen: Screen, assets: Assets, left_text: str, right_text: str, position: Tuple, text_color: Tuple=(255, 255, 255), background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0) -> None:
         """Initialized the highscore listing with the needed data
 
         :param screen: Screen to draw to
@@ -35,6 +36,7 @@ class HighScoreListing(UIElement):
         :type padding: int, optional
         """
         self.screen = screen
+        self.assets = assets
         self.left_text = left_text
         self.right_text = right_text
         self.position = position
@@ -48,11 +50,13 @@ class HighScoreListing(UIElement):
         self.texts = dict()
         self.texts["left"] = TextDisplay(
             screen,
+            assets=self.assets,
             text=self.left_text,
             position=position
         )
         self.texts["right"] = TextDisplay(
             screen,
+            assets=self.assets,
             text=self.right_text,
             position=(position[0] + 800, position[1])
         )
@@ -60,9 +64,10 @@ class HighScoreListing(UIElement):
         #self.merged_items = StaticFunctions.merge_dict(self.texts, self.text_loops, self.inner_buttons)
         self.container = Container(
             self.screen,
-            self.texts,
-            background_color=(55, 42, 34),
-            border_color=(255, 255, 255),
+            assets=self.assets,
+            items=self.texts,
+            background_color=self.assets.brown,
+            border_color=self.assets.white,
             border_size=5,
             padding=5,
         )

@@ -3,12 +3,13 @@ from __future__ import annotations
 from ctypes import Array
 from typing import Tuple
 import pygame
+from helpers.Assets import Assets
 from helpers.Screen import Screen
 
 from helpers.UIElement import UIElement
 
 class TextDisplay(UIElement):
-    def __init__(self, screen: Screen, text: str, position: Tuple, text_color: Tuple=(255, 255, 255), background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0, width: int=None) -> None:
+    def __init__(self, screen: Screen, assets: Assets, text: str, position: Tuple, text_color: Tuple=(255, 255, 255), background_color: Tuple=None, border_color: Tuple=None, border_size: int=0, font_size: int=36, padding: int=0, width: int=None) -> None:
         """_summary_
 
         :param screen: Screen to draw the result pin to

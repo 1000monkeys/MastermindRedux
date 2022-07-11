@@ -6,6 +6,13 @@ import pygame
 class UIElement(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
+        """Checks the class for the needed functions
+
+        :param subclass: The class to check
+        :type subclass: Class
+        :return: Boolean whether the passed class implements all the needed functions
+        :rtype: Boolean
+        """
         return (
             hasattr(subclass, 'handle_events')
             and callable(subclass.handle_events) and

@@ -5,6 +5,11 @@ from cryptography.fernet import Fernet
 
 class StaticFunctions():
     def merge_dict(*args: dict) -> dict:
+        """Merges dictionaries, leads names with a integer which is how many dict it is
+
+        :return: Merged dictionarie
+        :rtype: dict
+        """
         result = dict()
         dict_count = 0
         for dictionary in args:
@@ -13,7 +18,12 @@ class StaticFunctions():
             dict_count = dict_count + 1
         return result
 
-    def encrypt(target):
+    def encrypt(target: str):
+        """Encrypts a string and writes it to data.txt
+
+        :param target: String to encrypt
+        :type target: str
+        """
         key = b'5C2UhPiEnFdVurKEm-F4cLgWaqiqDZoDSnSIaOmGiDY='
         fernet = Fernet(key)
         target = json.dumps(target)
@@ -22,6 +32,11 @@ class StaticFunctions():
             f.write(encrypted.decode("utf-8"))
 
     def decrypt():
+        """Decrypts data.txt and sets up the json data dictionary
+
+        :return: Dicitonary build from decrypted data.txt
+        :rtype: Dict
+        """
         key = b'5C2UhPiEnFdVurKEm-F4cLgWaqiqDZoDSnSIaOmGiDY='
         fernet = Fernet(key)
         with open('data.txt') as f:
@@ -35,20 +50,3 @@ class StaticFunctions():
         json_data["2"] = dict(sorted(json_data["2"].items(), key=lambda item: item[1], reverse=True))
 
         return json_data
-"""
-data = {
-    "settings": {
-        "language_pos": 0,
-        "game_rounds_pos": 0,
-        "time_guess_pos": 0,
-        "amount_pins_pos": 0,
-        "name": "user"
-    },
-    "0": {"user": 1400, "user1": 2500},
-    "1": {},
-    "2": {}
-}
-
-StaticFunctions.encrypt(data)
-print(StaticFunctions.decrypt())
-"""

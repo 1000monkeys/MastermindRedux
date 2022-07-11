@@ -2,12 +2,13 @@ from __future__ import annotations
 import sys
 from typing import Tuple
 import pygame
+from helpers.Assets import Assets
 from helpers.Screen import Screen
 from helpers.UIElement import UIElement
 
 
 class Container(UIElement):
-    def __init__(self, screen: Screen, items: list, background_color: Tuple, border_color: Tuple, border_size: Tuple, padding: int) -> None:
+    def __init__(self, screen: Screen, assets: Assets, items: list, background_color: Tuple, border_color: Tuple, border_size: Tuple, padding: int) -> None:
         """This function initializes the container
 
         :param screen: The screen to draw the border, background and items to

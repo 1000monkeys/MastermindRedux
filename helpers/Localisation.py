@@ -7,9 +7,9 @@ if TYPE_CHECKING:
 from helpers.Enums.SettingsEnum import SettingsEnum
 
 class Localisation:
-    def __init__(self, display_manager: DisplayManager) -> None:
-        self.display_manager = display_manager
-
+    def __init__(self) -> None:
+        """Contains and sets up all the strings in all languages
+        """
         self.text_nl = dict()
         self.text_en = dict()
 
@@ -133,6 +133,17 @@ class Localisation:
             self.difficulty[SettingsEnum.Difficulty.value.HARD.value],
         ]
 
+        self.text_nl["difficulty_header"] = [
+            self.moeilijkheid[SettingsEnum.Difficulty.value.EASY.value] + " moeilijkheid",
+            self.moeilijkheid[SettingsEnum.Difficulty.value.NORMAL.value] + " moeilijkheid",
+            self.moeilijkheid[SettingsEnum.Difficulty.value.HARD.value] + " moeilijkheid",
+        ]
+        self.text_en["difficulty_header"] = [
+            self.difficulty[SettingsEnum.Difficulty.value.EASY.value] + " difficulty",
+            self.difficulty[SettingsEnum.Difficulty.value.NORMAL.value] + " difficulty",
+            self.difficulty[SettingsEnum.Difficulty.value.HARD.value] + " difficulty",
+        ]
+
         self.text_nl["score_list_info"] = {
             -1: "Huidige instellingen hebben GEEN top score lijst",
             0: "Huidige instellingen hebben de MAKKELIJK top score lijst",
@@ -141,9 +152,9 @@ class Localisation:
         }
         self.text_en["score_list_info"] = {
             -1: "Current settings have NO high score list",
-            0: "Current settings have the MAKKELIJK high score list",
-            1: "Current settings have the NORMAAL high score list",
-            2: "Current settings have the MOEILIJK high score list"
+            0: "Current settings have the EASY high score list",
+            1: "Current settings have the NORMAL high score list",
+            2: "Current settings have the DIFFICULT high score list"
         }
 
         self.text_nl["save_and_exit"] = "Opslaan en terug"
@@ -202,10 +213,21 @@ class Localisation:
         self.text_en["name_info"] = "Min 1, Max 10, Alpha only."
         self.text_en["name_info_2"] = "Backspace to remove and then type to enter!"
 
+        self.text_nl["short_name"] = "Naam is te kort!"
+        self.text_en["short_name"] = "Name is too short!"
+
+        self.text_nl["okay"] = "Oke!"
+        self.text_en["okay"] = "Okay!"
+
         self.languages = {0: self.text_nl, 1: self.text_en}
         self.current_language_id = 0
         self.current_language = self.languages[self.current_language_id]
 
     def set_language(self, language_pos: int) -> None:
+        """Set's the current language
+
+        :param language_pos: the language position to switch to
+        :type language_pos: int
+        """
         self.current_language_id = language_pos
         self.current_language = self.languages[self.current_language_id]

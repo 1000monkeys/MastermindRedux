@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class DifficultyEnum(Enum):
-    NONE = 0
-    EASY = 1
-    NORMAL = 2
-    DIFFICULT = 3
+    NONE = -1
+    EASY = 0
+    NORMAL = 1
+    DIFFICULT = 2

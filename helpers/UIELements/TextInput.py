@@ -3,6 +3,7 @@ import time
 
 from typing import Tuple
 import pygame
+from helpers.Assets import Assets
 from helpers.Screen import Screen
 
 from helpers.UIElement import UIElement

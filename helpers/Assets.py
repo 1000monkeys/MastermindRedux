@@ -9,7 +9,7 @@ class Assets:
     def __init__(self) -> None:
         """Sets up the assets
         """
-        self.release = True
+        self.release = False
         if self.release:
             self.main_background_image = pygame.image.load(self.resource_path("assets/enigma.jpg"))
             self.game_background_image = pygame.image.load(self.resource_path("assets/board.jpg"))

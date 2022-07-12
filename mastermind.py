@@ -49,8 +49,8 @@ class Game():
                 current_display.draw()
             else:
                 current_display.draw()
-                self.display_manager.message_screen.handle_events(events)
                 self.display_manager.message_screen.draw()
+                self.display_manager.message_screen.handle_events(events)
             pygame.display.flip()
 
 game = Game()
